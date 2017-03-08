@@ -46,6 +46,7 @@ public class JDBCClient implements ClientDAO{
         }
     }
 
+    @Override
     public Client read(String clientLogin,String clientPass){
         Client client = this.jdbcTemplate.queryForObject(
                 SQLStatementRead,
@@ -62,6 +63,7 @@ public class JDBCClient implements ClientDAO{
         return client;
     }
 
+    @Override
     public List<Client> readAll(){
         List<Client> clientList = this.jdbcTemplate.query(
                 SQLStatementReadAll,
@@ -77,14 +79,17 @@ public class JDBCClient implements ClientDAO{
         return clientList;
     }
 
+    @Override
     public void create (Client client){
         jdbcTemplate.update(SQLStatementCreate,client.getClientLogin(),client.getClientPass(),client.getClientFullName());
     }
 
+    @Override
     public void update (Client client){
         jdbcTemplate.update(SQLStatementUpdate,client.getClientPass(),client.getClientFullName(),client.getClientLogin());
     }
 
+    @Override
     public void delete(String clientLogin){
         jdbcTemplate.update(SQLStatementDelete,clientLogin);
     }
