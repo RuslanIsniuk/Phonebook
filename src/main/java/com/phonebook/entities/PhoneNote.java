@@ -1,9 +1,11 @@
 package com.phonebook.entities;
 
+import static com.phonebook.entities.PhoneNote.compareType.BY_SECOND_NAME;
+
 /**
  * Created by Руслан on 06.03.2017.
  */
-public class PhoneNote {
+public class PhoneNote implements Comparable<PhoneNote> {
     private String firstName;
     private String secondName;
     private String additionalName;
@@ -11,6 +13,14 @@ public class PhoneNote {
     private String homeNumber;
     private String location;
     private String email;
+    private Client noteOwner;
+    public static compareType noteCompareType = BY_SECOND_NAME;
+
+    public enum compareType {
+        BY_FIRST_NAME,
+        BY_SECOND_NAME,
+        BY_MOBILE_NUMBER;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -27,7 +37,8 @@ public class PhoneNote {
             return false;
         if (homeNumber != null ? !homeNumber.equals(phoneNote.homeNumber) : phoneNote.homeNumber != null) return false;
         if (location != null ? !location.equals(phoneNote.location) : phoneNote.location != null) return false;
-        return email != null ? email.equals(phoneNote.email) : phoneNote.email == null;
+        if (email != null ? !email.equals(phoneNote.email) : phoneNote.email != null) return false;
+        return noteOwner != null ? noteOwner.equals(phoneNote.noteOwner) : phoneNote.noteOwner == null;
     }
 
     @Override
@@ -39,7 +50,44 @@ public class PhoneNote {
         result = 31 * result + (homeNumber != null ? homeNumber.hashCode() : 0);
         result = 31 * result + (location != null ? location.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (noteOwner != null ? noteOwner.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(PhoneNote otherPhoneNote) {
+        int compareInt = 0;
+
+        switch (noteCompareType) {
+            case BY_FIRST_NAME:
+                compareInt = this.firstName.compareTo(otherPhoneNote.getFirstName());
+                break;
+
+            case BY_SECOND_NAME:
+                compareInt = this.secondName.compareTo(otherPhoneNote.getSecondName());
+                break;
+
+            case BY_MOBILE_NUMBER:
+                compareInt = this.mobileNumber.compareTo(otherPhoneNote.getMobileNumber());
+                break;
+        }
+        if (compareInt > 0) {
+            return 1;
+        }
+
+        if (compareInt < 0) {
+            return -1;
+        }
+
+        return 0;
+    }
+
+    public Client getNoteOwner() {
+        return noteOwner;
+    }
+
+    public void setNoteOwner(Client noteOwner) {
+        this.noteOwner = noteOwner;
     }
 
     public String getFirstName() {
