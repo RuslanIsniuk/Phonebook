@@ -33,11 +33,20 @@ public class JDBCClientTest {
     @Test
     public void testRead(){
         clientDAO.create(client);
-        Client client1 = clientDAO.read(client.getClientLogin(),client.getClientPass());
-        clientDAO.delete(client.getClientLogin());
+        Client client1 = clientDAO.read(client.getClientID());
+        clientDAO.delete(client.getClientID());
 
         assertEquals(client,client1);
 
+    }
+
+    @Test
+    public void testReadByLogin(){
+        clientDAO.create(client);
+        Client client1= clientDAO.readByLogin(client.getClientLogin());
+        clientDAO.delete(client.getClientID());
+
+        assertEquals(client,client1);
     }
 
     @Test
@@ -47,8 +56,8 @@ public class JDBCClientTest {
 
         List<Client> clientList = clientDAO.readAll();
 
-        clientDAO.delete(client.getClientLogin());
-        clientDAO.delete(client2.getClientLogin());
+        clientDAO.delete(client.getClientID());
+        clientDAO.delete(client2.getClientID());
 
         assertEquals(client,clientList.get(0));
         assertEquals(client2,clientList.get(1));
@@ -59,8 +68,8 @@ public class JDBCClientTest {
         Client client1;
 
         clientDAO.create(client);
-        client1 = clientDAO.read(client.getClientLogin(),client.getClientPass());
-        clientDAO.delete(client.getClientLogin());
+        client1 = clientDAO.read(client.getClientID());
+        clientDAO.delete(client.getClientID());
 
         assertEquals(client,client1);
     }
@@ -71,10 +80,10 @@ public class JDBCClientTest {
         Client client2 = new Client();
 
         clientDAO.create(client);
-        clientDAO.delete(client.getClientLogin());
+        clientDAO.delete(client.getClientID());
 
         try{
-            client1 = clientDAO.read(client.getClientLogin(),client.getClientPass());
+            client1 = clientDAO.read(client.getClientID());
         }catch (EmptyResultDataAccessException erdae){
             client1 = new Client();
         }
