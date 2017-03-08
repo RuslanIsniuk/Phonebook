@@ -8,9 +8,23 @@ import java.util.List;
  * Created by Руслан on 07.03.2017.
  */
 public interface PhoneNoteDAO {
-    PhoneNote read(String firstName, String secondName);
+    PhoneNote read(int noteID);
+
+    PhoneNote readByName(String firstName, String secondName);
+
+    List<PhoneNote> readByClientID(int clientID);
+
+    List<PhoneNote> readBySubStrInFirstName(String subStr);
+
+    List<PhoneNote> readBySubStrInSecondName(String subStr);
+
+    List<PhoneNote> readBySubStrInMobileNumber(String subStr);
+
     List<PhoneNote> readAll();
+
     void create(PhoneNote phoneNote);
-    void update(String firstName, String secondName,PhoneNote phoneNote);
-    void delete(String firstName, String secondName);
+
+    void update(PhoneNote phoneNote);
+
+    void delete(int noteID);
 }

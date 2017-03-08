@@ -9,9 +9,15 @@ import java.util.List;
  * Created by Руслан on 06.03.2017.
  */
 public interface ClientDAO {
-    Client read(String clientLogin,String clientPass);
+    Client read(int clientID);
+
+    Client readByLogin(String clientLogin);
+
     List<Client> readAll();
+
     void create(Client client);
+
     void update(Client client);
-    void delete(String clientLogin);
+
+    void delete(int clientID);
 }
