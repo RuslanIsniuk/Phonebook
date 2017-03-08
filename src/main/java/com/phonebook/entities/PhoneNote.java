@@ -1,11 +1,7 @@
 package com.phonebook.entities;
 
-import static com.phonebook.entities.PhoneNote.compareType.BY_SECOND_NAME;
-
-/**
- * Created by Руслан on 06.03.2017.
- */
-public class PhoneNote implements Comparable<PhoneNote> {
+public class PhoneNote {
+    private int noteID;
     private String firstName;
     private String secondName;
     private String additionalName;
@@ -14,12 +10,11 @@ public class PhoneNote implements Comparable<PhoneNote> {
     private String location;
     private String email;
     private Client noteOwner;
-    public static compareType noteCompareType = BY_SECOND_NAME;
 
-    public enum compareType {
+    public enum noteCompareType {
         BY_FIRST_NAME,
         BY_SECOND_NAME,
-        BY_MOBILE_NUMBER;
+        BY_MOBILE_NUMBER
     }
 
     @Override
@@ -29,6 +24,7 @@ public class PhoneNote implements Comparable<PhoneNote> {
 
         PhoneNote phoneNote = (PhoneNote) o;
 
+        if (noteID != phoneNote.noteID) return false;
         if (firstName != null ? !firstName.equals(phoneNote.firstName) : phoneNote.firstName != null) return false;
         if (secondName != null ? !secondName.equals(phoneNote.secondName) : phoneNote.secondName != null) return false;
         if (additionalName != null ? !additionalName.equals(phoneNote.additionalName) : phoneNote.additionalName != null)
@@ -43,7 +39,8 @@ public class PhoneNote implements Comparable<PhoneNote> {
 
     @Override
     public int hashCode() {
-        int result = firstName != null ? firstName.hashCode() : 0;
+        int result = noteID;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (secondName != null ? secondName.hashCode() : 0);
         result = 31 * result + (additionalName != null ? additionalName.hashCode() : 0);
         result = 31 * result + (mobileNumber != null ? mobileNumber.hashCode() : 0);
@@ -54,32 +51,12 @@ public class PhoneNote implements Comparable<PhoneNote> {
         return result;
     }
 
-    @Override
-    public int compareTo(PhoneNote otherPhoneNote) {
-        int compareInt = 0;
+    public int getNoteID() {
+        return noteID;
+    }
 
-        switch (noteCompareType) {
-            case BY_FIRST_NAME:
-                compareInt = this.firstName.compareTo(otherPhoneNote.getFirstName());
-                break;
-
-            case BY_SECOND_NAME:
-                compareInt = this.secondName.compareTo(otherPhoneNote.getSecondName());
-                break;
-
-            case BY_MOBILE_NUMBER:
-                compareInt = this.mobileNumber.compareTo(otherPhoneNote.getMobileNumber());
-                break;
-        }
-        if (compareInt > 0) {
-            return 1;
-        }
-
-        if (compareInt < 0) {
-            return -1;
-        }
-
-        return 0;
+    public void setNoteID(int noteID) {
+        this.noteID = noteID;
     }
 
     public Client getNoteOwner() {
