@@ -4,15 +4,15 @@ import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.PhoneNoteDAO;
 import com.phonebook.model.dao.impl.JDBCPhoneNote;
 import com.phonebook.model.exceptions.DuplicatePhoneNoteDataException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Руслан on 08.03.2017.
- */
 public class NoteOperations {
-    private PhoneNoteDAO phoneNoteDAO = new JDBCPhoneNote();
+    private ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
+    private PhoneNoteDAO phoneNoteDAO = (PhoneNoteDAO)ac.getBean("phoneNoteDAO");
 
     public void addNote(PhoneNote phoneNote) throws DuplicatePhoneNoteDataException {
         List<PhoneNote> phoneNoteList = phoneNoteDAO.readAll();
@@ -20,12 +20,12 @@ public class NoteOperations {
         phoneNoteDAO.create(phoneNote);
     }
 
-    public void deleteNote(String firstName, String secondName) {
-        phoneNoteDAO.delete(firstName, secondName);
+    public void deleteNote(int noteID) {
+        phoneNoteDAO.delete(noteID);
     }
 
     public void editNote(String firstName, String secondName, PhoneNote phoneNoteNew) throws DuplicatePhoneNoteDataException {
-        PhoneNote phoneNoteOld = phoneNoteDAO.read(firstName, secondName);
+        PhoneNote phoneNoteOld = phoneNoteDAO.readByName(firstName, secondName);
         List<PhoneNote> phoneNoteList = phoneNoteDAO.readAll();
 
         for (int i = 0; i < phoneNoteList.size(); i++) {
@@ -35,24 +35,25 @@ public class NoteOperations {
         }
 
         checkForDuplicateData(phoneNoteNew, phoneNoteList);
-        phoneNoteDAO.update(firstName, secondName, phoneNoteNew);
+        phoneNoteDAO.update(phoneNoteNew);
     }
 
-    public List<PhoneNote> sortNotesByFirstName (List<PhoneNote> phoneNoteList){
-        PhoneNote.noteCompareType = PhoneNote.compareType.BY_FIRST_NAME;
-        Collections.sort(phoneNoteList);
-        return phoneNoteList;
-    }
+    public List<PhoneNote> filterNotes(String subStr, PhoneNote.noteCompareType noteCompareType){
+        List<PhoneNote> phoneNoteList = new ArrayList<>();
 
-    public List<PhoneNote> sortNotesBySecondName (List<PhoneNote> phoneNoteList){
-        PhoneNote.noteCompareType = PhoneNote.compareType.BY_SECOND_NAME;
-        Collections.sort(phoneNoteList);
-        return phoneNoteList;
-    }
+        switch (noteCompareType){
+            case BY_FIRST_NAME:
+                phoneNoteList = phoneNoteDAO.readBySubStrInFirstName(subStr);
+                break;
 
-    public List<PhoneNote> sortNotesByMobileNumber (List<PhoneNote> phoneNoteList){
-        PhoneNote.noteCompareType = PhoneNote.compareType.BY_MOBILE_NUMBER;
-        Collections.sort(phoneNoteList);
+            case BY_SECOND_NAME:
+                phoneNoteList = phoneNoteDAO.readBySubStrInSecondName(subStr);
+                break;
+
+            case BY_MOBILE_NUMBER:
+                phoneNoteList =phoneNoteDAO.readBySubStrInMobileNumber(subStr);
+                break;
+        }
         return phoneNoteList;
     }
 
