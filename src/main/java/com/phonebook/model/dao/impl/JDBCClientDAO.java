@@ -3,24 +3,21 @@ package com.phonebook.model.dao.impl;
 import com.phonebook.entities.Client;
 import com.phonebook.model.dao.ClientDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.List;
 import java.util.Properties;
-
-/**
- * Created by Руслан on 07.03.2017.
- */
-public class JDBCClient implements ClientDAO {
+@Service
+public class JDBCClientDAO implements ClientDAO {
 
     private String SQLStatementRead;
     private String SQLStatementReadUsingClientLogin;
@@ -32,7 +29,7 @@ public class JDBCClient implements ClientDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public JDBCClient(){
+    public JDBCClientDAO(){
         Properties properties = new Properties();
 
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("JDBCClientConfig.properties")) {

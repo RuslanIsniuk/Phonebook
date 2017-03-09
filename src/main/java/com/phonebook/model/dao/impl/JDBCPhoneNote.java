@@ -3,8 +3,7 @@ package com.phonebook.model.dao.impl;
 import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.dao.PhoneNoteDAO;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,9 +35,10 @@ public class JDBCPhoneNote implements PhoneNoteDAO {
     private String SQLStatementReadBySubStrInSecondName;
     private String SQLStatementReadBySubStrInMobileNumber;
 
-    private ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
-    private JdbcTemplate jdbcTemplate = (JdbcTemplate) ac.getBean("jdbcTemplate");
-    private ClientDAO clientDAO = new JDBCClient();
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ClientDAO clientDAO;
 
     public JDBCPhoneNote() {
         Properties properties = new Properties();

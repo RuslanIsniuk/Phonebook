@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring-test.xml"})
-public class JDBCClientTest {
+public class JDBCClientDAOTest {
     @Autowired
     private ClientDAO clientDAO;
     private static Client client = new Client();

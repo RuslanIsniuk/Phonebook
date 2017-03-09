@@ -19,15 +19,11 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.spri
         <constructor-arg ref="dataSource"/>
     </bean>
 
-    <bean id="clientDAO" class="com.phonebook.model.dao.impl.JDBCClient"/>
+    <bean id="clientDAO" class="com.phonebook.model.dao.impl.JDBCClientDAO"/>
 
     <bean id="dbProperties"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:db.properties"/>
     </bean>
-
-
-
-
 
 </beans>
