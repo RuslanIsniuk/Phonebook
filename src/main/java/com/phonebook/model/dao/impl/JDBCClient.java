@@ -2,6 +2,7 @@ package com.phonebook.model.dao.impl;
 
 import com.phonebook.entities.Client;
 import com.phonebook.model.dao.ClientDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,10 +29,10 @@ public class JDBCClient implements ClientDAO {
     private String SQLStatementDelete;
     private String SQLStatementReadAll;
 
-    private ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
-    private JdbcTemplate jdbcTemplate = (JdbcTemplate) ac.getBean("jdbcTemplate");
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    public JDBCClient() {
+    public JDBCClient(){
         Properties properties = new Properties();
 
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("JDBCClientConfig.properties")) {

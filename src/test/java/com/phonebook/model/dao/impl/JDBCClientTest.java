@@ -5,17 +5,21 @@ import com.phonebook.model.dao.ClientDAO;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Руслан on 07.03.2017.
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:spring-test.xml"})
 public class JDBCClientTest {
-    private ClientDAO clientDAO = new JDBCClient();
+    @Autowired
+    private ClientDAO clientDAO;
     private static Client client = new Client();
     private static Client client2 = new Client();
 
