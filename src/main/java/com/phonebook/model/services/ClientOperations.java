@@ -3,7 +3,7 @@ package com.phonebook.model.services;
 import com.phonebook.entities.Client;
 import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.exceptions.DuplicateClientDataException;
-import com.phonebook.model.exceptions.LoginOrPassIncorrectException;
+import com.phonebook.model.exceptions.ClientDataIncorrectException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 @Component
 public class ClientOperations {
     @Autowired
@@ -18,38 +19,52 @@ public class ClientOperations {
 
     private static final String LOGIN_FIELD = "[a-zA-Z]{3,45}";
     private static final String PASS_FIELD = "[^\\s]{5,45}";
-    private static final String FULL_NAME_FIELD = "(\\w{5,20}\\s{1,5}\\w{5,20})||(\\w{5,12}\\s{1,2}\\w{5,12}\\s{1,2}\\w{5,12})";
+    private static final String FULL_NAME_FIELD = "(\\w{5,45})||(\\w{5,20}\\s{1,5}\\w{5,20})||(\\w{5,12}\\s{1,2}\\w{5,12}\\s{1,2}\\w{5,12})";
 
-    public Client authentication(String clientLogin, String clientPass) throws LoginOrPassIncorrectException {
-
-        if((!validationOnCorrectInput(clientLogin,LOGIN_FIELD))||(!validationOnCorrectInput(clientPass,PASS_FIELD))){
-            throw new LoginOrPassIncorrectException();
-        }
-
+    public Client authentication(String clientLogin, String clientPass) throws ClientDataIncorrectException {
+        validationOnCorrectInput(clientLogin,clientPass);
         Client client = clientDAO.readByLogin(clientLogin);
 
-        if(!clientPass.equals(client.getClientPass())){
-            throw new LoginOrPassIncorrectException();
+        if (!clientPass.equals(client.getClientPass())) {
+            throw new ClientDataIncorrectException();
         }
 
         return client;
     }
 
-    public void registration(Client client) throws DuplicateClientDataException {
+    public void registration(String clientLogin, String clientPass, String clientFullName) throws DuplicateClientDataException,ClientDataIncorrectException {
+        validationOnCorrectInput(clientLogin,clientPass,clientFullName);
         List<Client> clientList = clientDAO.readAll();
+
         for (Client clientFromList : clientList) {
-            if ((clientFromList.getClientLogin().equals(client.getClientLogin())) || (clientFromList.getClientFullName().equals(client.getClientFullName()))) {
+            if ((clientFromList.getClientLogin().equals(clientLogin)) || (clientFromList.getClientFullName().equals(clientFullName))) {
                 throw new DuplicateClientDataException();
             }
         }
-
+        Client client = new Client();
+        client.setClientLogin(clientLogin);
+        client.setClientPass(clientPass);
+        client.setClientFullName(clientFullName);
         clientDAO.create(client);
     }
 
-    private boolean validationOnCorrectInput(String checkedObject, String compileStr) {
+    private boolean compileStr(String checkedObject, String compileStr) {
         Pattern pattern = Pattern.compile(compileStr);
         Matcher matcher = pattern.matcher(checkedObject);
         return matcher.matches();
+    }
+
+    private void validationOnCorrectInput(String clientLogin, String clientPass) throws ClientDataIncorrectException {
+        if ((!compileStr(clientLogin, LOGIN_FIELD)) || (!compileStr(clientPass, PASS_FIELD))) {
+            throw new ClientDataIncorrectException();
+        }
+    }
+
+    private void validationOnCorrectInput(String clientLogin, String clientPass, String clientFullName) throws ClientDataIncorrectException {
+        validationOnCorrectInput(clientLogin,clientPass);
+        if(!compileStr(clientFullName,FULL_NAME_FIELD)){
+            throw new ClientDataIncorrectException("ERROR! Such name is already exist!");
+        }
     }
 
 }
