@@ -4,12 +4,14 @@ import com.phonebook.controller.command.Command;
 import com.phonebook.entities.Client;
 import com.phonebook.model.exceptions.ServiceException;
 import com.phonebook.model.services.ClientOperations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class AuthenticationCommand implements Command {
-    private ClientOperations clientOperations = new ClientOperations();
+    @Autowired
+    private ClientOperations clientOperations;
 
     @Override
     public String execute (HttpServletRequest request) {

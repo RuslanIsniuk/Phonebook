@@ -17,6 +17,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         <property name="password" value="${databasePass}"/>
     </bean>
 
+    <bean id="dispatcher" class="com.phonebook.controller.Dispatcher"/>
+
+    <bean id="clientOperations" class="com.phonebook.model.services.ClientOperations"/>
+
+    <bean id="authenticationCommand" class="com.phonebook.controller.command.impl.AuthenticationCommand"/>
+
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <constructor-arg ref="dataSource"/>
     </bean>

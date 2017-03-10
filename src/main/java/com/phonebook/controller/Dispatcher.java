@@ -3,20 +3,21 @@ package com.phonebook.controller;
 
 import com.phonebook.controller.command.impl.AuthenticationCommand;
 import com.phonebook.controller.command.impl.RegistrationCommand;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class Dispatcher {
     private static final Dispatcher Instance = new Dispatcher();
-
-    private AuthenticationCommand authenticationCommand = new AuthenticationCommand();
+    @Autowired
+    private AuthenticationCommand authenticationCommand;
     private RegistrationCommand registrationCommand = new RegistrationCommand();
 
     private Dispatcher() {
     }
 
     public String logicIdentificator(HttpServletRequest request) {
-        String pathToJSP = new String();
+        String pathToJSP ="";
         String attributeStr = request.getParameter("actionType");
 
 
