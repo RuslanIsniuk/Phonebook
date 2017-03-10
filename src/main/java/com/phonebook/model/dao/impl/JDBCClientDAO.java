@@ -8,14 +8,13 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.List;
 import java.util.Properties;
-@Service
+
 public class JDBCClientDAO implements ClientDAO {
 
     private String SQLStatementRead;

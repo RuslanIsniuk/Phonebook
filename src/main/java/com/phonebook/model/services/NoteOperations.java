@@ -4,6 +4,7 @@ import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.PhoneNoteDAO;
 import com.phonebook.model.dao.impl.JDBCPhoneNote;
 import com.phonebook.model.exceptions.DuplicatePhoneNoteDataException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -11,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteOperations {
-    private ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
-    private PhoneNoteDAO phoneNoteDAO = (PhoneNoteDAO)ac.getBean("phoneNoteDAO");
+    @Autowired
+    private PhoneNoteDAO phoneNoteDAO;
 
     public void addNote(PhoneNote phoneNote) throws DuplicatePhoneNoteDataException {
         List<PhoneNote> phoneNoteList = phoneNoteDAO.readAll();

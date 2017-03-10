@@ -5,14 +5,12 @@ import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.exceptions.DuplicateClientDataException;
 import com.phonebook.model.exceptions.ClientDataIncorrectException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
 public class ClientOperations {
     @Autowired
     private ClientDAO clientDAO;
