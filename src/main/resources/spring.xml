@@ -21,7 +21,23 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 
     <bean id="clientOperations" class="com.phonebook.model.services.ClientOperations"/>
 
+    <bean id="clientData" class="com.phonebook.model.services.ClientData"/>
+
+    <bean id="noteOperations" class="com.phonebook.model.services.NoteOperations"/>
+
     <bean id="authenticationCommand" class="com.phonebook.controller.command.impl.AuthenticationCommand"/>
+
+    <bean id="registrationCommand" class="com.phonebook.controller.command.impl.RegistrationCommand"/>
+
+    <bean id="openPage" class="com.phonebook.controller.command.impl.OpenPageCommand"/>
+
+    <bean id="filterByCommand" class="com.phonebook.controller.command.impl.FilterByCommand"/>
+
+    <bean id="editNoteCommand" class="com.phonebook.controller.command.impl.EditNoteCommand"/>
+
+    <bean id="addNoteCommand" class="com.phonebook.controller.command.impl.AddNoteCommand"/>
+
+    <bean id="deleteNoteCommand" class="com.phonebook.controller.command.impl.DeleteNoteCommand"/>
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <constructor-arg ref="dataSource"/>
@@ -29,6 +45,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 
 
     <bean id="clientDAO" class="com.phonebook.model.dao.impl.JDBCClientDAO"/>
+
+    <bean id="phoneNoteDAO" class="com.phonebook.model.dao.impl.JDBCPhoneNoteDAO"/>
 
     <bean id="dbProperties"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

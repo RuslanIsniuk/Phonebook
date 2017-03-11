@@ -2,7 +2,6 @@ package com.phonebook.model.dao.impl;
 
 import com.phonebook.entities.Client;
 import com.phonebook.model.dao.ClientDAO;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
