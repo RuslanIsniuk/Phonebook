@@ -8,12 +8,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
-/**
- * Created by Руслан on 06.03.2017.
- */
-public class ClientParser implements Parser {
+public class JaxbParser implements Parser {
 
-    public Object getObject(File file, Class c) throws JAXBException {
+    public Object getFromFile(File file, Class c) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(c);
         Unmarshaller unmarshaller = context.createUnmarshaller();
         Object object = unmarshaller.unmarshal(file);
@@ -21,9 +18,10 @@ public class ClientParser implements Parser {
         return object;
     }
 
-    public void saveObject(File file, Object o) throws JAXBException {
+    public void writeInFile(File file, Object o) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(o.getClass());
         Marshaller marshaller = context.createMarshaller();
-        marshaller.marshal(o,file);
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(o, file);
     }
 }
