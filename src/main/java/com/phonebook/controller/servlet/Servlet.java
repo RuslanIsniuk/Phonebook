@@ -1,10 +1,13 @@
 package com.phonebook.controller.servlet;
 
 import com.phonebook.controller.Dispatcher;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,11 +17,18 @@ import java.io.IOException;
 
 @WebServlet("/Servlet")
 public class Servlet extends HttpServlet {
-    private Dispatcher dispatcher = Dispatcher.getInstance();
+    @Autowired
+    private Dispatcher dispatcher;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
         parseRequest(request,response);
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+        super.init(config);
     }
 
     @Override
