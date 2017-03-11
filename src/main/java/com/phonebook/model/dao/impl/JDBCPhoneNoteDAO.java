@@ -12,17 +12,12 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Created by Руслан on 07.03.2017.
- */
-public class JDBCPhoneNote implements PhoneNoteDAO {
+
+public class JDBCPhoneNoteDAO implements PhoneNoteDAO {
     private String SQLStatementRead;
     private String SQLStatementReadByName;
     private String SQLStatementReadByClientID;
@@ -40,7 +35,7 @@ public class JDBCPhoneNote implements PhoneNoteDAO {
     @Autowired
     private ClientDAO clientDAO;
 
-    public JDBCPhoneNote() {
+    public JDBCPhoneNoteDAO() {
         Properties properties = new Properties();
 
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("JDBCPhoneNoteConfig.properties")) {
@@ -160,9 +155,10 @@ public class JDBCPhoneNote implements PhoneNoteDAO {
     }
 
     @Override
-    public List<PhoneNote> readBySubStrInFirstName(String subStr){
+    public List<PhoneNote> readBySubStrInFirstName(String subStr, int clientID) {
         List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                (SQLStatementReadBySubStrInFirstName+"'%"+subStr+"%'"),
+                (SQLStatementReadBySubStrInFirstName + "'%" + subStr + "%'"),
+                new Object[]{clientID},
                 new RowMapper<PhoneNote>() {
                     public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
                         PhoneNote phoneNoteTemp = new PhoneNote();
@@ -183,9 +179,10 @@ public class JDBCPhoneNote implements PhoneNoteDAO {
     }
 
     @Override
-    public List<PhoneNote> readBySubStrInSecondName(String subStr){
+    public List<PhoneNote> readBySubStrInSecondName(String subStr, int clientID) {
         List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                (SQLStatementReadBySubStrInSecondName+"'%"+subStr+"%'"),
+                (SQLStatementReadBySubStrInSecondName + "'%" + subStr + "%'"),
+                new Object[]{clientID},
                 new RowMapper<PhoneNote>() {
                     public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
                         PhoneNote phoneNoteTemp = new PhoneNote();
@@ -206,9 +203,10 @@ public class JDBCPhoneNote implements PhoneNoteDAO {
     }
 
     @Override
-    public List<PhoneNote> readBySubStrInMobileNumber(String subStr){
+    public List<PhoneNote> readBySubStrInMobileNumber(String subStr, int clientID) {
         List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                (SQLStatementReadBySubStrInMobileNumber+"'%"+subStr+"%'"),
+                (SQLStatementReadBySubStrInMobileNumber + "'%" + subStr + "%'"),
+                new Object[]{clientID},
                 new RowMapper<PhoneNote>() {
                     public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
                         PhoneNote phoneNoteTemp = new PhoneNote();
@@ -232,9 +230,10 @@ public class JDBCPhoneNote implements PhoneNoteDAO {
     public void create(PhoneNote phoneNote) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
-                                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                                    PreparedStatement pst =
-                                            con.prepareStatement(SQLStatementCreate, new String[]{"note_id"});
+                                @Override
+                                public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+
+                                    PreparedStatement pst = connection.prepareStatement(SQLStatementCreate, Statement.RETURN_GENERATED_KEYS);
                                     pst.setInt(1, phoneNote.getNoteOwner().getClientID());
                                     pst.setString(2, phoneNote.getFirstName());
                                     pst.setString(3, phoneNote.getSecondName());
@@ -255,7 +254,7 @@ public class JDBCPhoneNote implements PhoneNoteDAO {
     public void update(PhoneNote phoneNote) {
         jdbcTemplate.update(SQLStatementUpdate, phoneNote.getFirstName(), phoneNote.getSecondName(),
                 phoneNote.getAdditionalName(), phoneNote.getMobileNumber(), phoneNote.getHomeNumber(),
-                phoneNote.getLocation(), phoneNote.getEmail());
+                phoneNote.getLocation(), phoneNote.getEmail(),phoneNote.getNoteID());
     }
 
     @Override

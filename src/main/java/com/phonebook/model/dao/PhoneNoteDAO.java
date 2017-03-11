@@ -14,11 +14,11 @@ public interface PhoneNoteDAO {
 
     List<PhoneNote> readByClientID(int clientID);
 
-    List<PhoneNote> readBySubStrInFirstName(String subStr);
+    List<PhoneNote> readBySubStrInFirstName(String subStr, int clientID);
 
-    List<PhoneNote> readBySubStrInSecondName(String subStr);
+    List<PhoneNote> readBySubStrInSecondName(String subStr, int clientID);
 
-    List<PhoneNote> readBySubStrInMobileNumber(String subStr);
+    List<PhoneNote> readBySubStrInMobileNumber(String subStr, int clientID);
 
     List<PhoneNote> readAll();
 
