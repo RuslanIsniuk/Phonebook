@@ -19,6 +19,18 @@ public class ClientOperations {
     private static final String PASS_FIELD = "[^\\s]{5,45}";
     private static final String FULL_NAME_FIELD = "(\\w{5,45})||(\\w{5,20}\\s{1,5}\\w{5,20})||(\\w{5,12}\\s{1,2}\\w{5,12}\\s{1,2}\\w{5,12})";
 
+    public boolean checkClientID(Client clientFromSession, int clientID){
+        boolean checkPass;
+        Client client = clientDAO.read(clientID);
+
+        if((client.getClientLogin().equals(clientFromSession.getClientLogin()))&&(client.getClientFullName().equals(clientFromSession.getClientFullName()))){
+            checkPass = true;
+        }else{
+            checkPass = false;
+        }
+        return checkPass;
+    }
+
     public Client authentication(String clientLogin, String clientPass) throws ClientDataIncorrectException {
         validationOnCorrectInput(clientLogin,clientPass);
         Client client = clientDAO.readByLogin(clientLogin);
