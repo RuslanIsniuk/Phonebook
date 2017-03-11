@@ -4,8 +4,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+
+@XmlType(propOrder = {"clientID", "clientLogin", "clientPass", "clientFullName"})
 @XmlRootElement(name = "client")
-@XmlType(propOrder = {"clientLogin","clientPass","clientFullName"})
 public class Client {
     private int clientID;
     private String clientLogin;
@@ -37,7 +38,7 @@ public class Client {
     public int getClientID() {
         return clientID;
     }
-
+    @XmlElement
     public void setClientID(int clientID) {
         this.clientID = clientID;
     }
@@ -46,7 +47,7 @@ public class Client {
         return clientLogin;
     }
 
-    @XmlElement(name = "client_login")
+    @XmlElement
     public void setClientLogin(String clientLogin) {
         this.clientLogin = clientLogin;
     }
@@ -55,7 +56,7 @@ public class Client {
         return clientPass;
     }
 
-    @XmlElement(name = "client_pass")
+    @XmlElement
     public void setClientPass(String clientPass) {
         this.clientPass = clientPass;
     }
@@ -64,7 +65,7 @@ public class Client {
         return clientFullName;
     }
 
-    @XmlElement(name = "client_full_name")
+    @XmlElement
     public void setClientFullName(String clientFullName) {
         this.clientFullName = clientFullName;
     }
