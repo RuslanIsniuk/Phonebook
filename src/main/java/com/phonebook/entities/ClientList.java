@@ -17,4 +17,12 @@ public class ClientList {
     public void setClientList(List<Client> clientList) {
         this.clients = clientList;
     }
+
+    public void addClient(Client client){
+        clients.add(client);
+    }
+
+    public void removeClient(Client client){
+        clients.remove(client);
+    }
 }
