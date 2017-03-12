@@ -1,9 +1,9 @@
 package com.phonebook.parser.impl;
 
 import com.phonebook.entities.Client;
-import com.phonebook.entities.ClientList;
 import com.phonebook.entities.PhoneNote;
-import com.phonebook.entities.PhoneNoteList;
+import com.phonebook.model.dao.ClientList;
+import com.phonebook.model.dao.PhoneNoteList;
 import com.phonebook.parser.Parser;
 import junit.framework.TestCase;
 import org.junit.*;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring-dao.xml"})
 public class JaxbParserTest extends TestCase {
     @Autowired
     private Parser parser;
@@ -105,11 +105,11 @@ public class JaxbParserTest extends TestCase {
         phoneNotes.add(phoneNote2);
 
         PhoneNoteList phoneNoteList = new PhoneNoteList();
-        phoneNoteList.setClientList(phoneNotes);
+        phoneNoteList.setNoteList(phoneNotes);
 
         parser.writeInFile(phoneNoteFile,phoneNoteList);
         PhoneNoteList phoneNoteList1 = (PhoneNoteList) parser.getFromFile(phoneNoteFile,PhoneNoteList.class);
-        System.out.println(phoneNoteList1.getClientList());
+        System.out.println(phoneNoteList1.getNoteList());
     }
 
 }

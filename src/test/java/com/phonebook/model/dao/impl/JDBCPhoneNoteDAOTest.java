@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring-dao.xml"})
 public class JDBCPhoneNoteDAOTest {
     @Autowired
     private  ClientDAO clientDAO;
@@ -53,7 +53,7 @@ public class JDBCPhoneNoteDAOTest {
 
     }
     private void createObj(){
-        clientDAO.create(client);
+        clientDAO.insert(client);
         phoneNote.setNoteOwner(client);
         phoneNote2.setNoteOwner(client);
         phoneNoteDAO.create(phoneNote);
