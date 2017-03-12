@@ -4,6 +4,7 @@ import com.phonebook.entities.Client;
 import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.exceptions.DuplicateClientDataException;
 import com.phonebook.model.exceptions.ClientDataIncorrectException;
+import com.phonebook.model.exceptions.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -19,20 +20,20 @@ public class ClientOperations {
     private static final String PASS_FIELD = "[^\\s]{5,45}";
     private static final String FULL_NAME_FIELD = "(\\w{5,45})||(\\w{5,20}\\s{1,5}\\w{5,20})||(\\w{5,12}\\s{1,2}\\w{5,12}\\s{1,2}\\w{5,12})";
 
-    public boolean checkClientID(Client clientFromSession, int clientID){
+    public boolean checkClientID(Client clientFromSession, int clientID) {
         boolean checkPass;
         Client client = clientDAO.read(clientID);
 
-        if((client.getClientLogin().equals(clientFromSession.getClientLogin()))&&(client.getClientFullName().equals(clientFromSession.getClientFullName()))){
+        if ((client.getClientLogin().equals(clientFromSession.getClientLogin())) && (client.getClientFullName().equals(clientFromSession.getClientFullName()))) {
             checkPass = true;
-        }else{
+        } else {
             checkPass = false;
         }
         return checkPass;
     }
 
     public Client authentication(String clientLogin, String clientPass) throws ClientDataIncorrectException {
-        validationOnCorrectInput(clientLogin,clientPass);
+        validationOnCorrectInput(clientLogin, clientPass);
         Client client = clientDAO.readByLogin(clientLogin);
 
         if (!clientPass.equals(client.getClientPass())) {
@@ -42,8 +43,8 @@ public class ClientOperations {
         return client;
     }
 
-    public void registration(String clientLogin, String clientPass, String clientFullName) throws DuplicateClientDataException,ClientDataIncorrectException {
-        validationOnCorrectInput(clientLogin,clientPass,clientFullName);
+    public void registration(String clientLogin, String clientPass, String clientFullName) throws ServiceException {
+        validationOnCorrectInput(clientLogin, clientPass, clientFullName);
         List<Client> clientList = clientDAO.readAll();
 
         for (Client clientFromList : clientList) {
@@ -71,8 +72,8 @@ public class ClientOperations {
     }
 
     private void validationOnCorrectInput(String clientLogin, String clientPass, String clientFullName) throws ClientDataIncorrectException {
-        validationOnCorrectInput(clientLogin,clientPass);
-        if(!compileStr(clientFullName,FULL_NAME_FIELD)){
+        validationOnCorrectInput(clientLogin, clientPass);
+        if (!compileStr(clientFullName, FULL_NAME_FIELD)) {
             throw new ClientDataIncorrectException("ERROR! Such name is already exist!");
         }
     }

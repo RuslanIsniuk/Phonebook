@@ -4,9 +4,6 @@ import com.phonebook.entities.PhoneNote;
 
 import java.util.List;
 
-/**
- * Created by Руслан on 07.03.2017.
- */
 public interface PhoneNoteDAO {
     PhoneNote read(int noteID);
 

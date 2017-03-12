@@ -11,11 +11,11 @@ public class ClientData {
     @Autowired
     private PhoneNoteDAO phoneNoteDAO;
 
-    public List<PhoneNote> getPhonebook(Client client){
+    public List<PhoneNote> getPhonebook(Client client) {
         return phoneNoteDAO.readByClientID(client.getClientID());
     }
 
-    public PhoneNote getNote (int noteID){
+    public PhoneNote getNote(int noteID) {
         return phoneNoteDAO.read(noteID);
     }
 }
