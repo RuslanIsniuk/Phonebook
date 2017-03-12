@@ -11,7 +11,7 @@ public interface ClientDAO {
 
     List<Client> readAll();
 
-    void create(Client client);
+    void insert(Client client);
 
     void update(Client client);
 

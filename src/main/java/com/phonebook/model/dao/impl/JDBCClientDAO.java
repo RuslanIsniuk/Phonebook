@@ -27,7 +27,19 @@ public class JDBCClientDAO implements ClientDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public JDBCClientDAO(){
+    private static class ClientRowMapper implements RowMapper<Client> {
+        @Override
+        public Client mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Client clientTemp = new Client();
+            clientTemp.setClientID(rs.getInt("client_id"));
+            clientTemp.setClientLogin(rs.getString("client_login"));
+            clientTemp.setClientPass(rs.getString("client_pass"));
+            clientTemp.setClientFullName(rs.getString("client_full_name"));
+            return clientTemp;
+        }
+    }
+
+    public JDBCClientDAO() {
         Properties properties = new Properties();
 
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("JDBCClientConfig.properties")) {
@@ -48,59 +60,29 @@ public class JDBCClientDAO implements ClientDAO {
 
     @Override
     public Client read(int clientID) {
-        Client client = this.jdbcTemplate.queryForObject(
+        return this.jdbcTemplate.queryForObject(
                 SQLStatementRead,
                 new Object[]{clientID},
-                new RowMapper<Client>() {
-                    public Client mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Client clientTemp = new Client();
-                        clientTemp.setClientID(rs.getInt("client_id"));
-                        clientTemp.setClientLogin(rs.getString("client_login"));
-                        clientTemp.setClientPass(rs.getString("client_pass"));
-                        clientTemp.setClientFullName(rs.getString("client_full_name"));
-                        return clientTemp;
-                    }
-                });
-        return client;
+                new ClientRowMapper());
     }
 
     @Override
     public Client readByLogin(String clientLogin) {
-        Client client = this.jdbcTemplate.queryForObject(
+        return this.jdbcTemplate.queryForObject(
                 SQLStatementReadUsingClientLogin,
                 new Object[]{clientLogin},
-                new RowMapper<Client>() {
-                    public Client mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Client clientTemp = new Client();
-                        clientTemp.setClientID(rs.getInt("client_id"));
-                        clientTemp.setClientLogin(rs.getString("client_login"));
-                        clientTemp.setClientPass(rs.getString("client_pass"));
-                        clientTemp.setClientFullName(rs.getString("client_full_name"));
-                        return clientTemp;
-                    }
-                });
-        return client;
+                new ClientRowMapper());
     }
 
     @Override
     public List<Client> readAll() {
-        List<Client> clientList = this.jdbcTemplate.query(
+        return this.jdbcTemplate.query(
                 SQLStatementReadAll,
-                new RowMapper<Client>() {
-                    public Client mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Client clientTemp = new Client();
-                        clientTemp.setClientID(rs.getInt("client_id"));
-                        clientTemp.setClientLogin(rs.getString("client_login"));
-                        clientTemp.setClientPass(rs.getString("client_pass"));
-                        clientTemp.setClientFullName(rs.getString("client_full_name"));
-                        return clientTemp;
-                    }
-                });
-        return clientList;
+                new ClientRowMapper());
     }
 
     @Override
-    public void create(Client client) {
+    public void insert(Client client) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
 
@@ -108,10 +90,10 @@ public class JDBCClientDAO implements ClientDAO {
                                 public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 
                                     PreparedStatement pst = connection.prepareStatement(SQLStatementCreate, Statement.RETURN_GENERATED_KEYS);
-                                        pst.setString(1, client.getClientLogin());
-                                        pst.setString(2, client.getClientPass());
-                                        pst.setString(3, client.getClientFullName());
-                                        return   pst;
+                                    pst.setString(1, client.getClientLogin());
+                                    pst.setString(2, client.getClientPass());
+                                    pst.setString(3, client.getClientFullName());
+                                    return pst;
                                 }
                             },
                 keyHolder);

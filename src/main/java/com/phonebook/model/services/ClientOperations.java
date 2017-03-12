@@ -56,7 +56,7 @@ public class ClientOperations {
         client.setClientLogin(clientLogin);
         client.setClientPass(clientPass);
         client.setClientFullName(clientFullName);
-        clientDAO.create(client);
+        clientDAO.insert(client);
     }
 
     private boolean compileStr(String checkedObject, String compileStr) {

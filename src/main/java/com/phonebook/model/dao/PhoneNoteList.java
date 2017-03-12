@@ -1,4 +1,6 @@
-package com.phonebook.entities;
+package com.phonebook.model.dao;
+
+import com.phonebook.entities.PhoneNote;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
