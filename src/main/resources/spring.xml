@@ -44,9 +44,29 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
     </bean>
 
 
-    <bean id="clientDAO" class="com.phonebook.model.dao.impl.JDBCClientDAO"/>
+    <bean id="JDBCClientDAO" class="com.phonebook.model.dao.impl.JDBCClientDAO"/>
 
-    <bean id="phoneNoteDAO" class="com.phonebook.model.dao.impl.JDBCPhoneNoteDAO"/>
+    <bean id="JDBCPhoneNoteDAO" class="com.phonebook.model.dao.impl.JDBCPhoneNoteDAO"/>
+
+    <bean id="XMLClientDAO" class="com.phonebook.model.dao.impl.XMLClientDAO">
+        <constructor-arg ref="parser"/>
+        <constructor-arg ref="clientFile"/>
+    </bean>
+
+    <bean id="XMLPhoneNoteDAO" class="com.phonebook.model.dao.impl.XMLPhoneNoteDAO">
+        <constructor-arg ref="parser"/>
+        <constructor-arg ref="noteFile"/>
+    </bean>
+
+    <bean id="clientFile" class="java.io.File">
+        <constructor-arg value="clientList.xml"/>
+    </bean>
+
+    <bean id="noteFile" class="java.io.File">
+        <constructor-arg value="noteList.xml"/>
+    </bean>
+
+    <bean id="parser" class="com.phonebook.parser.impl.JaxbParser"/>
 
     <bean id="dbProperties"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
