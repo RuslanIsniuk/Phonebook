@@ -14,6 +14,7 @@ import java.util.List;
 
 public class FilterByCommand extends Command {
     private static final Logger logger = Logger.getLogger(FilterByCommand.class);
+    private static final String DEFAULT_OPERATION_CONFIRM_PATH = "/jsp/viewNotes.jsp";
     @Autowired
     private NoteOperations noteOperations;
 
@@ -44,7 +45,7 @@ public class FilterByCommand extends Command {
         }
         request.setAttribute("phoneNoteList", phoneNoteList);
         request.setAttribute("clientID", client.getClientID());
-        pathToJSP = "/jsp/viewNotes.jsp";
+        pathToJSP = DEFAULT_OPERATION_CONFIRM_PATH;
         return pathToJSP;
     }
 }

@@ -26,15 +26,15 @@ public abstract class Command {
         }
     }
 
-    public int getNoteIDFromRequest(HttpServletRequest request){
+    public int getNoteIDFromRequest(HttpServletRequest request) {
         return Integer.parseInt(request.getParameter("noteID"));
     }
 
-    public void passClientValidation(HttpServletRequest request)throws AuthorizationException{
+    public void passClientValidation(HttpServletRequest request) throws AuthorizationException {
         int clientID = Integer.parseInt(request.getParameter("clientID"));
         Client client = (Client) request.getSession().getAttribute("clientData");
 
-        if(!clientOperations.checkClientID(client,clientID)){
+        if (!clientOperations.checkClientID(client, clientID)) {
             throw new AuthorizationException();
         }
     }

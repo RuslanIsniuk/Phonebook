@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 
 public class EditNoteCommand extends Command {
-    private static final Logger logger = Logger.getLogger(FilterByCommand.class);
+    private static final Logger logger = Logger.getLogger(EditNoteCommand.class);
+    private static final String DEFAULT_OPERATION_FAIL_PATH = "/jsp/editNote.jsp";
+    private static final String DEFAULT_OPERATION_CONFIRM_PATH = "/jsp/operationConfirm.jsp";
     @Autowired
     private NoteOperations noteOperations;
     @Autowired
@@ -40,13 +42,13 @@ public class EditNoteCommand extends Command {
             noteOperations.editNote(noteID, phoneNoteNew);
             request.setAttribute("clientID", client.getClientID());
             request.setAttribute("infoMessage", "Operation done successfully!");
-            pathToJSP = "/jsp/operationConfirm.jsp";
+            pathToJSP = DEFAULT_OPERATION_CONFIRM_PATH;
         } catch (ServiceException se) {
             logger.error(se);
             request.setAttribute("clientID", client.getClientID());
             request.setAttribute("phoneNoteList", clientData.getPhonebook(client));
             request.setAttribute("errorMessage", se.getMessage());
-            pathToJSP = "/jsp/editNote.jsp";
+            pathToJSP = DEFAULT_OPERATION_FAIL_PATH;
         }
         return pathToJSP;
     }

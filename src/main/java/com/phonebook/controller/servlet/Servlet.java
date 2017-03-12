@@ -21,8 +21,8 @@ public class Servlet extends HttpServlet {
     private Dispatcher dispatcher;
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
-        parseRequest(request,response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        parseRequest(request, response);
     }
 
     @Override
@@ -32,15 +32,15 @@ public class Servlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
-        parseRequest(request,response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        parseRequest(request, response);
     }
 
-    protected void parseRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    protected void parseRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathToWebPage = dispatcher.logicIdentificator(request);
 
         RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(pathToWebPage);
-        requestDispatcher.forward(request,response);
+        requestDispatcher.forward(request, response);
     }
 
 }

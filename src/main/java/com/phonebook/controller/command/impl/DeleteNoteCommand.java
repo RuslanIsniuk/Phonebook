@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * Created by Руслан on 11.03.2017.
- */
 public class DeleteNoteCommand extends Command {
+    private static final String DEFAULT_OPERATION_CONFIRM_PATH = "/jsp/operationConfirm.jsp";
     @Autowired
     private NoteOperations noteOperations;
 
@@ -24,7 +22,7 @@ public class DeleteNoteCommand extends Command {
         noteOperations.deleteNote(noteID);
         request.setAttribute("clientID", client.getClientID());
         request.setAttribute("infoMessage", "Operation done successfully!");
-        pathToJSP = "/jsp/operationConfirm.jsp";
+        pathToJSP = DEFAULT_OPERATION_CONFIRM_PATH;
         return pathToJSP;
     }
 }
