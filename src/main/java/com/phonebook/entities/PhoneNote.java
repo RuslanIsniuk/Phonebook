@@ -1,10 +1,8 @@
 package com.phonebook.entities;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
-@XmlType(propOrder = {"noteID", "firstName", "secondName", "additionalName", "mobileNumber", "homeNumber", "location", "email", "noteOwner"})
+@XmlType(propOrder ={"noteID","firstName","secondName","additionalName","mobileNumber","homeNumber","location","email","noteOwner"} )
 @XmlRootElement(name = "note")
 public class PhoneNote {
     private int noteID;
@@ -61,7 +59,6 @@ public class PhoneNote {
         return noteID;
     }
 
-    @XmlElement
     public void setNoteID(int noteID) {
         this.noteID = noteID;
     }
@@ -69,8 +66,7 @@ public class PhoneNote {
     public Client getNoteOwner() {
         return noteOwner;
     }
-
-    @XmlElement(name = "client")
+    @XmlElement(type = Client.class)
     public void setNoteOwner(Client noteOwner) {
         this.noteOwner = noteOwner;
     }
@@ -79,7 +75,6 @@ public class PhoneNote {
         return firstName;
     }
 
-    @XmlElement
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -88,7 +83,6 @@ public class PhoneNote {
         return secondName;
     }
 
-    @XmlElement
     public void setSecondName(String secondName) {
         this.secondName = secondName;
     }
@@ -97,7 +91,6 @@ public class PhoneNote {
         return additionalName;
     }
 
-    @XmlElement
     public void setAdditionalName(String additionalName) {
         this.additionalName = additionalName;
     }
@@ -106,7 +99,6 @@ public class PhoneNote {
         return mobileNumber;
     }
 
-    @XmlElement
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
@@ -115,7 +107,6 @@ public class PhoneNote {
         return homeNumber;
     }
 
-    @XmlElement
     public void setHomeNumber(String homeNumber) {
         this.homeNumber = homeNumber;
     }
@@ -124,7 +115,6 @@ public class PhoneNote {
         return location;
     }
 
-    @XmlElement
     public void setLocation(String location) {
         this.location = location;
     }
@@ -133,7 +123,6 @@ public class PhoneNote {
         return email;
     }
 
-    @XmlElement
     public void setEmail(String email) {
         this.email = email;
     }

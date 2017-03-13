@@ -1,11 +1,12 @@
 package com.phonebook.entities;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
-@XmlType(propOrder = {"clientID", "clientLogin", "clientPass", "clientFullName"})
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "client")
 public class Client {
     private int clientID;
@@ -39,7 +40,6 @@ public class Client {
         return clientID;
     }
 
-    @XmlElement
     public void setClientID(int clientID) {
         this.clientID = clientID;
     }
@@ -48,7 +48,6 @@ public class Client {
         return clientLogin;
     }
 
-    @XmlElement
     public void setClientLogin(String clientLogin) {
         this.clientLogin = clientLogin;
     }
@@ -57,7 +56,6 @@ public class Client {
         return clientPass;
     }
 
-    @XmlElement
     public void setClientPass(String clientPass) {
         this.clientPass = clientPass;
     }
@@ -66,7 +64,6 @@ public class Client {
         return clientFullName;
     }
 
-    @XmlElement
     public void setClientFullName(String clientFullName) {
         this.clientFullName = clientFullName;
     }
