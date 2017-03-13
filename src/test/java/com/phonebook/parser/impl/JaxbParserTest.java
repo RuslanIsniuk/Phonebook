@@ -89,6 +89,7 @@ public class JaxbParserTest extends TestCase {
         phoneNote.setHomeNumber("testHNum");
         phoneNote.setLocation("testLocation");
         phoneNote.setEmail("testEmail");
+        phoneNote.setNoteOwner(client);
 
         PhoneNote phoneNote2 = new PhoneNote();
         phoneNote2.setNoteID(2);
@@ -99,6 +100,7 @@ public class JaxbParserTest extends TestCase {
         phoneNote2.setHomeNumber("testHNum2");
         phoneNote2.setLocation("testLocation2");
         phoneNote2.setEmail("testEmail2");
+        phoneNote2.setNoteOwner(client);
 
         List<PhoneNote> phoneNotes = new ArrayList<>();
         phoneNotes.add(phoneNote);

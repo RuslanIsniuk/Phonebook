@@ -37,8 +37,17 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.spri
 
     <bean id="jdbcClientDAO" class="com.phonebook.model.dao.impl.JDBCClientDAO"/>
 
+    <!--<bean id="xmlClientDAO" class="com.phonebook.model.dao.impl.XMLClientDAO">-->
+        <!--<constructor-arg ref="parser"/>-->
+        <!--<constructor-arg ref="file"/>-->
+    <!--</bean>-->
+
     <bean id="phoneNoteDAO" class="com.phonebook.model.dao.impl.JDBCPhoneNoteDAO"/>
 
     <bean id="parser" class="com.phonebook.parser.impl.JaxbParser"/>
+
+    <!--<bean id="file" class="java.io.File">-->
+        <!--<constructor-arg value="TestClientList.xml"/>-->
+    <!--</bean>-->
 
 </beans>

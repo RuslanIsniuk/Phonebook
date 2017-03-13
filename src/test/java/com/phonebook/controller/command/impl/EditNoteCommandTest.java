@@ -44,7 +44,7 @@ public class EditNoteCommandTest {
     Client client;
 
     @Before
-    public void setUp() throws ServiceException {
+    public void setUp() throws ServiceException, AuthorizationException {
         editNoteCommand = new EditNoteCommand(noteOperations, clientData, clientOperations);
         when(client.getClientID()).thenReturn(1);
         when(request.getSession().getAttribute("clientData")).thenReturn(client);
