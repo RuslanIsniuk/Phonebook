@@ -1,5 +1,6 @@
 package com.phonebook.model.services;
 
+import com.phonebook.controller.exceptions.AuthorizationException;
 import com.phonebook.entities.Client;
 import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.PhoneNoteDAO;
@@ -25,9 +26,13 @@ public class NoteOperations {
     private static final String LOCATION_FIELD = "([\\s])||(.{4,45})";
     private static final String EMAIL_FIELD = "([\\s])||(^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
             "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$)";
+    private static final String ERROR_MESSAGE = "Error! Nothing found!";
 
-    public void addNote(PhoneNote phoneNote, Client client) throws ServiceException {
+    public void addNote(PhoneNote phoneNote, Client client) throws ServiceException, AuthorizationException {
         List<PhoneNote> phoneNoteList = phoneNoteDAO.readAll();
+        if (!(phoneNoteList instanceof List)) {
+            throw new AuthorizationException();
+        }
         checkForCorrectInput(phoneNote);
         checkForDuplicateData(phoneNote, phoneNoteList);
         phoneNote.setNoteOwner(client);
@@ -38,8 +43,12 @@ public class NoteOperations {
         phoneNoteDAO.delete(noteID);
     }
 
-    public void editNote(int noteIDOld, PhoneNote phoneNoteNew) throws ServiceException {
+    public void editNote(int noteIDOld, PhoneNote phoneNoteNew) throws ServiceException, AuthorizationException {
         PhoneNote phoneNoteOld = phoneNoteDAO.read(noteIDOld);
+        if (!(phoneNoteOld instanceof PhoneNote)) {
+            throw new AuthorizationException();
+        }
+
         List<PhoneNote> phoneNoteList = phoneNoteDAO.readAll();
         fillEmptyFields(phoneNoteNew, phoneNoteOld);
         checkForCorrectInput(phoneNoteNew);
@@ -54,20 +63,29 @@ public class NoteOperations {
         phoneNoteDAO.update(phoneNoteNew);
     }
 
-    public List<PhoneNote> filterNotes(String subStr, int clientID, PhoneNote.noteCompareType noteCompareType) {
+    public List<PhoneNote> filterNotes(String subStr, int clientID, PhoneNote.noteCompareType noteCompareType) throws ServiceException {
         List<PhoneNote> phoneNoteList = new ArrayList<>();
 
         switch (noteCompareType) {
             case BY_FIRST_NAME:
                 phoneNoteList = phoneNoteDAO.readBySubStrInFirstName(subStr, clientID);
+                if (!(phoneNoteList instanceof List)) {
+                    throw new PhoneNoteDataIncorrectException(ERROR_MESSAGE);
+                }
                 break;
 
             case BY_SECOND_NAME:
                 phoneNoteList = phoneNoteDAO.readBySubStrInSecondName(subStr, clientID);
+                if (!(phoneNoteList instanceof List)) {
+                    throw new PhoneNoteDataIncorrectException(ERROR_MESSAGE);
+                }
                 break;
 
             case BY_MOBILE_NUMBER:
                 phoneNoteList = phoneNoteDAO.readBySubStrInMobileNumber(subStr, clientID);
+                if (!(phoneNoteList instanceof List)) {
+                    throw new PhoneNoteDataIncorrectException(ERROR_MESSAGE);
+                }
                 break;
         }
         return phoneNoteList;

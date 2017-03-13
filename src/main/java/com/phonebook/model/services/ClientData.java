@@ -1,5 +1,6 @@
 package com.phonebook.model.services;
 
+import com.phonebook.controller.exceptions.AuthorizationException;
 import com.phonebook.entities.Client;
 import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.PhoneNoteDAO;
@@ -11,11 +12,19 @@ public class ClientData {
     @Autowired
     private PhoneNoteDAO phoneNoteDAO;
 
-    public List<PhoneNote> getPhonebook(Client client) {
-        return phoneNoteDAO.readByClientID(client.getClientID());
+    public List<PhoneNote> getPhonebook(Client client) throws AuthorizationException {
+        List<PhoneNote> phoneNoteList = phoneNoteDAO.readByClientID(client.getClientID());
+        if (!(phoneNoteList instanceof List)) {
+            throw new AuthorizationException();
+        }
+        return phoneNoteList;
     }
 
-    public PhoneNote getNote(int noteID) {
-        return phoneNoteDAO.read(noteID);
+    public PhoneNote getNote(int noteID) throws AuthorizationException {
+        PhoneNote phoneNote = phoneNoteDAO.read(noteID);
+        if (!(phoneNote instanceof PhoneNote)) {
+            throw new AuthorizationException();
+        }
+        return phoneNote;
     }
 }

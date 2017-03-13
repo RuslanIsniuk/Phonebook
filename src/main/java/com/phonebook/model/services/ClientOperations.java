@@ -1,5 +1,6 @@
 package com.phonebook.model.services;
 
+import com.phonebook.controller.exceptions.AuthorizationException;
 import com.phonebook.entities.Client;
 import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.exceptions.DuplicateClientDataException;
@@ -20,21 +21,27 @@ public class ClientOperations {
     private static final String PASS_FIELD = "[^\\s]{5,45}";
     private static final String FULL_NAME_FIELD = "(\\w{5,45})||(\\w{5,20}\\s{1,5}\\w{5,20})||(\\w{5,12}\\s{1,2}\\w{5,12}\\s{1,2}\\w{5,12})";
 
-    public boolean checkClientID(Client clientFromSession, int clientID) {
-        boolean checkPass;
+    public boolean checkClientID(Client clientFromSession, int clientID) throws AuthorizationException {
+        boolean checkPass = false;
         Client client = clientDAO.read(clientID);
+
+        if (!(client instanceof Client)) {
+            throw new AuthorizationException();
+        }
 
         if ((client.getClientLogin().equals(clientFromSession.getClientLogin())) && (client.getClientFullName().equals(clientFromSession.getClientFullName()))) {
             checkPass = true;
-        } else {
-            checkPass = false;
         }
         return checkPass;
     }
 
-    public Client authentication(String clientLogin, String clientPass) throws ClientDataIncorrectException {
+    public Client authentication(String clientLogin, String clientPass) throws ServiceException {
         validationOnCorrectInput(clientLogin, clientPass);
         Client client = clientDAO.readByLogin(clientLogin);
+
+        if (!(client instanceof Client)) {
+            throw new ClientDataIncorrectException();
+        }
 
         if (!clientPass.equals(client.getClientPass())) {
             throw new ClientDataIncorrectException();
@@ -47,11 +54,14 @@ public class ClientOperations {
         validationOnCorrectInput(clientLogin, clientPass, clientFullName);
         List<Client> clientList = clientDAO.readAll();
 
-        for (Client clientFromList : clientList) {
-            if ((clientFromList.getClientLogin().equals(clientLogin)) || (clientFromList.getClientFullName().equals(clientFullName))) {
-                throw new DuplicateClientDataException();
+        if (clientList instanceof List) {
+            for (Client clientFromList : clientList) {
+                if ((clientFromList.getClientLogin().equals(clientLogin)) || (clientFromList.getClientFullName().equals(clientFullName))) {
+                    throw new DuplicateClientDataException();
+                }
             }
         }
+
         Client client = new Client();
         client.setClientLogin(clientLogin);
         client.setClientPass(clientPass);
