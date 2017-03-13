@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Web Phonebook</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
 <blockquote><blockquote>

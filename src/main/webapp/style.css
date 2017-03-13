@@ -1,0 +1,48 @@
+table {
+    width: 100%;
+}
+
+td {
+    height: 24px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.CONFLICT {
+    background-color: #fff400;
+}
+
+.IMPOSSIBLE {
+    background-color: #ff2100;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr.border_bottom td {
+    border-bottom:1pt solid black;
+}
+
+form {
+    margin-bottom: 0;
+}
+
+tr:hover {
+    background-color: #c9c9c9;
+}
+
+INPUT .readonly {
+    background-color: grey;
+}
+
+#error {
+    color: darkred;
+    font-weight: bold;
+}
+
+#result {
+
+}
+

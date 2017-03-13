@@ -5,6 +5,7 @@
 <html>
 <head>
     <title>Web Phonebook</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
 <blockquote>
@@ -39,7 +40,7 @@
                             <input type="hidden" value="openEditNotePage" name="actionType"/>
                             <input type="submit" value="  Edit  " name="chooseButton" align="center"/>
                         </form>
-
+                   
                         <form method="post" action="/Servlet">
                             <input type="hidden" value="${phoneNoteList[i].noteID}" name="noteID"/>
                             <input type="hidden" value="${clientID}" name="clientID"/>
@@ -51,6 +52,8 @@
                 </tr>
             </c:forEach>
         </table>
+
+        <h3><font color="#dc143c"><c:out value="${errorMessage}"></c:out></font></h3></p>
 
         <form method="post" action="/Servlet">
             <p>Find by :</p>
