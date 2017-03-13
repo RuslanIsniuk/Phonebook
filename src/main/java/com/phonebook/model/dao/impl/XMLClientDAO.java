@@ -27,10 +27,9 @@ public class XMLClientDAO implements ClientDAO {
                 clientFile.createNewFile();
             }
             clientList = (ClientList) parser.getFromFile(clientFile, ClientList.class);
-        } catch (IOException ioe) {
-            logger.error(ioe);
-        } catch (JAXBException je) {
-            logger.error(je);
+        } catch (IOException | JAXBException | NullPointerException e) {
+            logger.error(e);
+            clientList = new ClientList();
         }
 
         for (Client clientFromList : clientList.getClientList()) {
@@ -42,30 +41,20 @@ public class XMLClientDAO implements ClientDAO {
 
     @Override
     public Client read(int clientID) {
-        try {
-            for (Client clientFromList : clientList.getClientList()) {
-                if (clientID == clientFromList.getClientID()) {
-                    return clientFromList;
-                }
+        for (Client clientFromList : clientList.getClientList()) {
+            if (clientID == clientFromList.getClientID()) {
+                return clientFromList;
             }
-            throw new NullPointerException();
-        } catch (NullPointerException ne) {
-            logger.error(ne);
         }
         return null;
     }
 
     @Override
     public Client readByLogin(String clientLogin) {
-        try {
-            for (Client clientFromList : clientList.getClientList()) {
-                if (clientLogin.equals(clientFromList.getClientLogin())) {
-                    return clientFromList;
-                }
+        for (Client clientFromList : clientList.getClientList()) {
+            if (clientLogin.equals(clientFromList.getClientLogin())) {
+                return clientFromList;
             }
-            throw new NullPointerException();
-        } catch (NullPointerException ne) {
-            logger.error(ne);
         }
         return null;
     }
@@ -83,40 +72,22 @@ public class XMLClientDAO implements ClientDAO {
 
     @Override
     public void update(Client client) {
-        try {
-            boolean operationStatus = false;
-            for (Client clientFromList : clientList.getClientList()) {
-                if (client.getClientID() == clientFromList.getClientID()) {
-                    clientList.removeClient(clientFromList);
-                    clientList.addClient(client);
-                    operationStatus = true;
-                }
+        for (Client clientFromList : clientList.getClientList()) {
+            if (client.getClientID() == clientFromList.getClientID()) {
+                clientList.removeClient(clientFromList);
+                clientList.addClient(client);
             }
-            if (!operationStatus) {
-                throw new NullPointerException();
-            }
-        } catch (NullPointerException ne) {
-            logger.error(ne);
         }
     }
 
     @Override
     public void delete(int clientID) {
-        try {
-            boolean operationStatus = false;
-            for (Client clientFromList : clientList.getClientList()) {
-                if (clientID == clientFromList.getClientID()) {
-                    clientList.removeClient(clientFromList);
-                    operationStatus = true;
-                }
+        Client client = new Client();
+        for (Client clientFromList : clientList.getClientList()) {
+            if (clientID == clientFromList.getClientID()) {
+                client = clientFromList;
             }
-            if (!operationStatus) {
-                throw new NullPointerException();
-            }
-        } catch (NullPointerException ne) {
-            logger.error(ne);
         }
-
-
+        clientList.removeClient(client);
     }
 }

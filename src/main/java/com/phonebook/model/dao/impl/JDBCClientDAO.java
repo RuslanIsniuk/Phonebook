@@ -2,7 +2,9 @@ package com.phonebook.model.dao.impl;
 
 import com.phonebook.entities.Client;
 import com.phonebook.model.dao.ClientDAO;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class JDBCClientDAO implements ClientDAO {
+    private static final Logger logger = Logger.getLogger(JDBCClientDAO.class);
 
     private String SQLStatementRead;
     private String SQLStatementReadUsingClientLogin;
@@ -27,7 +30,7 @@ public class JDBCClientDAO implements ClientDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static class ClientRowMapper implements RowMapper<Client> {
+    private class ClientRowMapper implements RowMapper<Client> {
         @Override
         public Client mapRow(ResultSet rs, int rowNum) throws SQLException {
             Client clientTemp = new Client();
@@ -60,25 +63,42 @@ public class JDBCClientDAO implements ClientDAO {
 
     @Override
     public Client read(int clientID) {
-        return this.jdbcTemplate.queryForObject(
-                SQLStatementRead,
-                new Object[]{clientID},
-                new ClientRowMapper());
+        try {
+            return this.jdbcTemplate.queryForObject(
+                    SQLStatementRead,
+                    new Object[]{clientID},
+                    new ClientRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
+
     }
 
     @Override
     public Client readByLogin(String clientLogin) {
-        return this.jdbcTemplate.queryForObject(
-                SQLStatementReadUsingClientLogin,
-                new Object[]{clientLogin},
-                new ClientRowMapper());
+        try {
+            return this.jdbcTemplate.queryForObject(
+                    SQLStatementReadUsingClientLogin,
+                    new Object[]{clientLogin},
+                    new ClientRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
+
     }
 
     @Override
     public List<Client> readAll() {
-        return this.jdbcTemplate.query(
-                SQLStatementReadAll,
-                new ClientRowMapper());
+        try {
+            return this.jdbcTemplate.query(
+                    SQLStatementReadAll,
+                    new ClientRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
@@ -102,7 +122,7 @@ public class JDBCClientDAO implements ClientDAO {
 
     @Override
     public void update(Client client) {
-        jdbcTemplate.update(SQLStatementUpdate, client.getClientPass(), client.getClientFullName(), client.getClientLogin());
+        jdbcTemplate.update(SQLStatementUpdate,client.getClientLogin(), client.getClientPass(), client.getClientFullName(), client.getClientID());
     }
 
     @Override

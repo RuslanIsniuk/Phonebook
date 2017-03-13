@@ -3,7 +3,9 @@ package com.phonebook.model.dao.impl;
 import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.dao.PhoneNoteDAO;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,6 +20,8 @@ import java.util.Properties;
 
 
 public class JDBCPhoneNoteDAO implements PhoneNoteDAO {
+    private static final Logger logger = Logger.getLogger(JDBCClientDAO.class);
+
     private String SQLStatementRead;
     private String SQLStatementReadByName;
     private String SQLStatementReadByClientID;
@@ -55,175 +59,116 @@ public class JDBCPhoneNoteDAO implements PhoneNoteDAO {
             SQLStatementReadBySubStrInMobileNumber = properties.getProperty("StatementReadBySubStrInMobileNumber");
 
         } catch (IOException ex) {
+            logger.error(ex);
             ex.getMessage();
+        }
+    }
+
+    private class NoteRowMapper implements RowMapper<PhoneNote> {
+        @Override
+        public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
+            PhoneNote phoneNoteTemp = new PhoneNote();
+            phoneNoteTemp.setNoteID(rs.getInt("note_id"));
+            phoneNoteTemp.setFirstName(rs.getString("first_name"));
+            phoneNoteTemp.setSecondName(rs.getString("second_name"));
+            phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
+            phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
+            phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
+            phoneNoteTemp.setLocation(rs.getString("location"));
+            phoneNoteTemp.setEmail(rs.getString("email"));
+            phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
+            return phoneNoteTemp;
         }
     }
 
     @Override
     public PhoneNote read(int noteID) {
-        PhoneNote phoneNote = this.jdbcTemplate.queryForObject(
-                SQLStatementRead,
-                new Object[]{noteID},
-                new RowMapper<PhoneNote>() {
-                    public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        PhoneNote phoneNoteTemp = new PhoneNote();
-                        phoneNoteTemp.setNoteID(rs.getInt("note_id"));
-                        phoneNoteTemp.setFirstName(rs.getString("first_name"));
-                        phoneNoteTemp.setSecondName(rs.getString("second_name"));
-                        phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
-                        phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
-                        phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
-                        phoneNoteTemp.setLocation(rs.getString("location"));
-                        phoneNoteTemp.setEmail(rs.getString("email"));
-                        phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
-
-                        return phoneNoteTemp;
-                    }
-                });
-        return phoneNote;
+        try {
+            return this.jdbcTemplate.queryForObject(
+                    SQLStatementRead,
+                    new Object[]{noteID},
+                    new NoteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
     public PhoneNote readByName(String firstName, String secondName) {
-        PhoneNote phoneNote = this.jdbcTemplate.queryForObject(
-                SQLStatementReadByName,
-                new Object[]{firstName, secondName},
-                new RowMapper<PhoneNote>() {
-                    public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        PhoneNote phoneNoteTemp = new PhoneNote();
-                        phoneNoteTemp.setNoteID(rs.getInt("note_id"));
-                        phoneNoteTemp.setFirstName(rs.getString("first_name"));
-                        phoneNoteTemp.setSecondName(rs.getString("second_name"));
-                        phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
-                        phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
-                        phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
-                        phoneNoteTemp.setLocation(rs.getString("location"));
-                        phoneNoteTemp.setEmail(rs.getString("email"));
-                        phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
-
-                        return phoneNoteTemp;
-                    }
-                });
-        return phoneNote;
+        try {
+            return this.jdbcTemplate.queryForObject(
+                    SQLStatementReadByName,
+                    new Object[]{firstName, secondName},
+                    new NoteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
     public List<PhoneNote> readByClientID(int clientID) {
-        List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                SQLStatementReadByClientID,
-                new Object[]{clientID},
-                new RowMapper<PhoneNote>() {
-                    public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        PhoneNote phoneNoteTemp = new PhoneNote();
-                        phoneNoteTemp.setNoteID(rs.getInt("note_id"));
-                        phoneNoteTemp.setFirstName(rs.getString("first_name"));
-                        phoneNoteTemp.setSecondName(rs.getString("second_name"));
-                        phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
-                        phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
-                        phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
-                        phoneNoteTemp.setLocation(rs.getString("location"));
-                        phoneNoteTemp.setEmail(rs.getString("email"));
-                        phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
-
-                        return phoneNoteTemp;
-                    }
-                });
-        return phoneNoteList;
+        try {
+            return this.jdbcTemplate.query(
+                    SQLStatementReadByClientID,
+                    new Object[]{clientID},
+                    new NoteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
     public List<PhoneNote> readAll() {
-        List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                SQLStatementReadAll,
-                new RowMapper<PhoneNote>() {
-                    public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        PhoneNote phoneNoteTemp = new PhoneNote();
-                        phoneNoteTemp.setNoteID(rs.getInt("note_id"));
-                        phoneNoteTemp.setFirstName(rs.getString("first_name"));
-                        phoneNoteTemp.setSecondName(rs.getString("second_name"));
-                        phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
-                        phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
-                        phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
-                        phoneNoteTemp.setLocation(rs.getString("location"));
-                        phoneNoteTemp.setEmail(rs.getString("email"));
-                        phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
-
-                        return phoneNoteTemp;
-                    }
-                });
-        return phoneNoteList;
+        try {
+            return this.jdbcTemplate.query(
+                    SQLStatementReadAll,
+                    new NoteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
     public List<PhoneNote> readBySubStrInFirstName(String subStr, int clientID) {
-        List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                (SQLStatementReadBySubStrInFirstName + "'%" + subStr + "%'"),
-                new Object[]{clientID},
-                new RowMapper<PhoneNote>() {
-                    public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        PhoneNote phoneNoteTemp = new PhoneNote();
-                        phoneNoteTemp.setNoteID(rs.getInt("note_id"));
-                        phoneNoteTemp.setFirstName(rs.getString("first_name"));
-                        phoneNoteTemp.setSecondName(rs.getString("second_name"));
-                        phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
-                        phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
-                        phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
-                        phoneNoteTemp.setLocation(rs.getString("location"));
-                        phoneNoteTemp.setEmail(rs.getString("email"));
-                        phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
-
-                        return phoneNoteTemp;
-                    }
-                });
-        return phoneNoteList;
+        try {
+            return this.jdbcTemplate.query(
+                    (SQLStatementReadBySubStrInFirstName + "'%" + subStr + "%'"),
+                    new Object[]{clientID},
+                    new NoteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
     public List<PhoneNote> readBySubStrInSecondName(String subStr, int clientID) {
-        List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                (SQLStatementReadBySubStrInSecondName + "'%" + subStr + "%'"),
-                new Object[]{clientID},
-                new RowMapper<PhoneNote>() {
-                    public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        PhoneNote phoneNoteTemp = new PhoneNote();
-                        phoneNoteTemp.setNoteID(rs.getInt("note_id"));
-                        phoneNoteTemp.setFirstName(rs.getString("first_name"));
-                        phoneNoteTemp.setSecondName(rs.getString("second_name"));
-                        phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
-                        phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
-                        phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
-                        phoneNoteTemp.setLocation(rs.getString("location"));
-                        phoneNoteTemp.setEmail(rs.getString("email"));
-                        phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
-
-                        return phoneNoteTemp;
-                    }
-                });
-        return phoneNoteList;
+        try {
+            return this.jdbcTemplate.query(
+                    (SQLStatementReadBySubStrInSecondName + "'%" + subStr + "%'"),
+                    new Object[]{clientID},
+                    new NoteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
     public List<PhoneNote> readBySubStrInMobileNumber(String subStr, int clientID) {
-        List<PhoneNote> phoneNoteList = this.jdbcTemplate.query(
-                (SQLStatementReadBySubStrInMobileNumber + "'%" + subStr + "%'"),
-                new Object[]{clientID},
-                new RowMapper<PhoneNote>() {
-                    public PhoneNote mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        PhoneNote phoneNoteTemp = new PhoneNote();
-                        phoneNoteTemp.setNoteID(rs.getInt("note_id"));
-                        phoneNoteTemp.setFirstName(rs.getString("first_name"));
-                        phoneNoteTemp.setSecondName(rs.getString("second_name"));
-                        phoneNoteTemp.setAdditionalName(rs.getString("additional_name"));
-                        phoneNoteTemp.setMobileNumber(rs.getString("mobile_number"));
-                        phoneNoteTemp.setHomeNumber(rs.getString("home_number"));
-                        phoneNoteTemp.setLocation(rs.getString("location"));
-                        phoneNoteTemp.setEmail(rs.getString("email"));
-                        phoneNoteTemp.setNoteOwner(clientDAO.read(rs.getInt("client_id")));
-
-                        return phoneNoteTemp;
-                    }
-                });
-        return phoneNoteList;
+        try {
+            return this.jdbcTemplate.query(
+                    (SQLStatementReadBySubStrInMobileNumber + "'%" + subStr + "%'"),
+                    new Object[]{clientID},
+                    new NoteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     @Override
@@ -254,7 +199,7 @@ public class JDBCPhoneNoteDAO implements PhoneNoteDAO {
     public void update(PhoneNote phoneNote) {
         jdbcTemplate.update(SQLStatementUpdate, phoneNote.getFirstName(), phoneNote.getSecondName(),
                 phoneNote.getAdditionalName(), phoneNote.getMobileNumber(), phoneNote.getHomeNumber(),
-                phoneNote.getLocation(), phoneNote.getEmail(),phoneNote.getNoteID());
+                phoneNote.getLocation(), phoneNote.getEmail(), phoneNote.getNoteID());
     }
 
     @Override

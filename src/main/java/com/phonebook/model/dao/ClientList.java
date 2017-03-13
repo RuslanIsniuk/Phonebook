@@ -4,12 +4,14 @@ import com.phonebook.entities.Client;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
 @XmlRootElement(name = "clients")
 public class ClientList {
-    private List<Client> clients;
+    private List<Client> clients = new ArrayList<>();
 
     public List<Client> getClientList() {
         return clients;
@@ -25,6 +27,13 @@ public class ClientList {
     }
 
     public void removeClient(Client client){
-        clients.remove(client);
+        Iterator<Client> iter = clients.iterator();
+
+        while (iter.hasNext()) {
+           Client clientFromList = iter.next();
+
+            if (client.getClientID() == clientFromList.getClientID())
+                iter.remove();
+        }
     }
 }
