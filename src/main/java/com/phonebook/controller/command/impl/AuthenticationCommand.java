@@ -6,7 +6,6 @@ import com.phonebook.entities.Client;
 import com.phonebook.model.exceptions.ServiceException;
 import com.phonebook.model.services.ClientOperations;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,10 +13,15 @@ import javax.servlet.http.HttpSession;
 public class AuthenticationCommand extends Command {
     private static final Logger logger = Logger.getLogger(AuthenticationCommand.class);
     private static final String DEFAULT_OPERATION_FAIL_PATH = "/index.jsp";
-    @Autowired
-    private ClientOperations clientOperations;
-    @Autowired
     private OpenPageCommand openPageCommand;
+
+    public AuthenticationCommand() {
+    }
+
+    public AuthenticationCommand(OpenPageCommand openPageCommand, ClientOperations clientOperations) {
+        this.openPageCommand = openPageCommand;
+        this.clientOperations = clientOperations;
+    }
 
     @Override
     public String execute(HttpServletRequest request) throws AuthorizationException {

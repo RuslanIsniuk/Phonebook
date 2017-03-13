@@ -6,9 +6,9 @@ import com.phonebook.entities.Client;
 import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.exceptions.ServiceException;
 import com.phonebook.model.services.ClientData;
+import com.phonebook.model.services.ClientOperations;
 import com.phonebook.model.services.NoteOperations;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,10 +16,17 @@ public class AddNoteCommand extends Command {
     private static final Logger logger = Logger.getLogger(AddNoteCommand.class);
     private static final String DEFAULT_OPERATION_FAIL_PATH = "/jsp/editNote.jsp";
     private static final String DEFAULT_OPERATION_CONFIRM_PATH = "/jsp/operationConfirm.jsp";
-    @Autowired
     private NoteOperations noteOperations;
-    @Autowired
     private ClientData clientData;
+
+    public AddNoteCommand() {
+    }
+
+    public AddNoteCommand(NoteOperations noteOperations, ClientData clientData, ClientOperations clientOperations) {
+        this.noteOperations = noteOperations;
+        this.clientData = clientData;
+        this.clientOperations = clientOperations;
+    }
 
     @Override
     public String execute(HttpServletRequest request) throws AuthorizationException {

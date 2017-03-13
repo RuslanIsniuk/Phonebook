@@ -4,7 +4,6 @@ import com.phonebook.controller.command.Command;
 import com.phonebook.model.exceptions.ServiceException;
 import com.phonebook.model.services.ClientOperations;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,8 +11,13 @@ public class RegistrationCommand extends Command {
     private static final Logger logger = Logger.getLogger(RegistrationCommand.class);
     private static final String DEFAULT_OPERATION_FAIL_PATH = "/jsp/registration.jsp";
     private static final String DEFAULT_OPERATION_CONFIRM_PATH = "/index.jsp";
-    @Autowired
-    private ClientOperations clientOperations;
+
+    public RegistrationCommand() {
+    }
+
+    public RegistrationCommand(ClientOperations clientOperations) {
+        this.clientOperations = clientOperations;
+    }
 
     @Override
     public String execute(HttpServletRequest request) {
