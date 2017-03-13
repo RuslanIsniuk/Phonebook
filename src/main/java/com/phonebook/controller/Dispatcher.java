@@ -1,32 +1,35 @@
 package com.phonebook.controller;
 
-
 import com.phonebook.controller.command.impl.*;
 import com.phonebook.controller.exceptions.AuthorizationException;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class Dispatcher {
     private static final Logger logger = Logger.getLogger(Dispatcher.class);
     private static final Dispatcher Instance = new Dispatcher();
-    @Autowired
     private AuthenticationCommand authenticationCommand;
-    @Autowired
     private RegistrationCommand registrationCommand;
-    @Autowired
     private OpenPageCommand openPageCommand;
-    @Autowired
     private FilterByCommand filterByCommand;
-    @Autowired
     private EditNoteCommand editNoteCommand;
-    @Autowired
     private AddNoteCommand addNoteCommand;
-    @Autowired
     private DeleteNoteCommand deleteNoteCommand;
 
     private Dispatcher() {
+    }
+
+    public Dispatcher(AuthenticationCommand authenticationCommand, RegistrationCommand registrationCommand,
+                      OpenPageCommand openPageCommand, FilterByCommand filterByCommand, EditNoteCommand editNoteCommand,
+                      AddNoteCommand addNoteCommand, DeleteNoteCommand deleteNoteCommand) {
+        this.authenticationCommand = authenticationCommand;
+        this.registrationCommand = registrationCommand;
+        this.openPageCommand = openPageCommand;
+        this.filterByCommand = filterByCommand;
+        this.editNoteCommand = editNoteCommand;
+        this.addNoteCommand = addNoteCommand;
+        this.deleteNoteCommand = deleteNoteCommand;
     }
 
     public String logicIdentificator(HttpServletRequest request) {

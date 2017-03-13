@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class Command {
     private static final Logger logger = Logger.getLogger(Command.class);
     @Autowired
-    private ClientOperations clientOperations;
+    protected ClientOperations clientOperations;
 
     public abstract String execute(HttpServletRequest request) throws AuthorizationException;
 
