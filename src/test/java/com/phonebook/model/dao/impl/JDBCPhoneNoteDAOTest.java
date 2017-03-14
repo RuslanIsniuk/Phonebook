@@ -8,6 +8,7 @@ import com.phonebook.entities.Client;
 import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.dao.PhoneNoteDAO;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -42,6 +44,7 @@ public class JDBCPhoneNoteDAOTest {
         phoneNote = new PhoneNote();
         phoneNote2 = new PhoneNote();
 
+        client.setClientID(1);
         client.setClientLogin("testLogin");
         client.setClientPass("testPass");
         client.setClientFullName("testFullName");
@@ -64,44 +67,55 @@ public class JDBCPhoneNoteDAOTest {
         phoneNote2.setLocation("testLocation2");
         phoneNote2.setEmail("testEmail2");
 
+        phoneNote.setNoteOwner(client);
+        phoneNote2.setNoteOwner(client);
+
+    }
+
+    @After
+    public void tearDown(){
+        client = null;
+        phoneNote = null;
+        phoneNote2 = null;
     }
 
     @Test
     @DatabaseSetup("/ds/1phoneNote-ds.xml")
     public void read(){
-        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote.getNoteID());
-        assertEquals(phoneNote, phoneNote1);
+        PhoneNote phoneNoteActual = phoneNoteDAO.read(1);
+        assertEquals(phoneNote, phoneNoteActual);
     }
 
     @Test
-    @DatabaseSetup("/ds/1client-ds.xml")
+    @DatabaseSetup("/ds/1phoneNote-ds.xml")
     public void readByName() {
         PhoneNote phoneNote1 = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
         assertEquals(phoneNote, phoneNote1);
     }
 
     @Test
-    @DatabaseSetup("/ds/1client-ds.xml")
+    @DatabaseSetup("/ds/2phoneNote-ds.xml")
     public void readBySubStrInFirstName() {
+        List<PhoneNote> phoneNoteListExpected = Arrays.asList(phoneNote,phoneNote2);
         List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInFirstName("testF",client.getClientID());
-        assertEquals(phoneNote, phoneNotes.get(0));
-        assertEquals(phoneNote2, phoneNotes.get(1));
+        assertEquals(phoneNoteListExpected,phoneNotes);
+
     }
 
     @Test
-    @DatabaseSetup("/ds/1client-ds.xml")
+    @DatabaseSetup("/ds/2phoneNote-ds.xml")
     public void readBySubStrInSecondName(){
+        List<PhoneNote> phoneNoteListExpected = Arrays.asList(phoneNote,phoneNote2);
         List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInSecondName("testS",client.getClientID());
-        assertEquals(phoneNote, phoneNotes.get(0));
-        assertEquals(phoneNote2, phoneNotes.get(1));
+        assertEquals(phoneNoteListExpected,phoneNotes);
     }
 
     @Test
-    @DatabaseSetup("/ds/1client-ds.xml")
+    @DatabaseSetup("/ds/2phoneNote-ds.xml")
     public void readBySubStrInMobileNumber(){
+        List<PhoneNote> phoneNoteListExpected = Arrays.asList(phoneNote,phoneNote2);
         List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInMobileNumber("Mob",client.getClientID());
-        assertEquals(phoneNote, phoneNotes.get(0));
-        assertEquals(phoneNote2, phoneNotes.get(1));
+        assertEquals(phoneNoteListExpected,phoneNotes);
     }
 
     @Test
@@ -121,7 +135,7 @@ public class JDBCPhoneNoteDAOTest {
     @Test
     @DatabaseSetup("/ds/blank-ds.xml")
     public void readBySubStrInFirstNameNotExist() {
-        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInFirstName("testF",client.getClientID());
+        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInFirstName("testF",1);
         List<PhoneNote> phoneNotes1 = new ArrayList<>();
         assertEquals(phoneNotes, phoneNotes1);
     }
@@ -129,7 +143,7 @@ public class JDBCPhoneNoteDAOTest {
     @Test
     @DatabaseSetup("/ds/blank-ds.xml")
     public void readBySubStrInSecondNameNotExist(){
-        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInSecondName("testS",client.getClientID());
+        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInSecondName("testS",1);
         List<PhoneNote> phoneNotes1 = new ArrayList<>();
         assertEquals(phoneNotes, phoneNotes1);
     }
@@ -137,7 +151,7 @@ public class JDBCPhoneNoteDAOTest {
     @Test
     @DatabaseSetup("/ds/blank-ds.xml")
     public void readBySubStrInMobileNumberNotExist(){
-        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInMobileNumber("Mob",client.getClientID());
+        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInMobileNumber("Mob",1);
         List<PhoneNote> phoneNotes1 = new ArrayList<>();
         assertEquals(phoneNotes, phoneNotes1);
     }
@@ -152,7 +166,7 @@ public class JDBCPhoneNoteDAOTest {
     }
 
     @Test
-    @DatabaseSetup("/ds/blank-ds.xml")
+    @DatabaseSetup("/ds/2phoneNote-ds.xml")
     public void testReadAll(){
         List<PhoneNote> phoneNotes = phoneNoteDAO.readAll();
         assertEquals(phoneNote, phoneNotes.get(0));
@@ -160,7 +174,9 @@ public class JDBCPhoneNoteDAOTest {
     }
 
     @Test
-    @DatabaseSetup("/ds/1client-ds.xml")
+    @DatabaseSetup("/ds/1phoneNote-ds.xml")
+    @ExpectedDatabase(
+            assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/ds/expectet-after-update-1note-update-ds.xml")
     public void testUpdate(){
         phoneNote.setFirstName("testFName4");
         phoneNote.setSecondName("testSName4");
@@ -171,14 +187,14 @@ public class JDBCPhoneNoteDAOTest {
         phoneNote.setEmail("testEmail4");
 
         phoneNoteDAO.update(phoneNote);
-        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote.getNoteID());
+        PhoneNote phoneNoteActual = phoneNoteDAO.read(1);
 
-        assertEquals(phoneNote,phoneNote1);
+        assertEquals(phoneNote,phoneNoteActual);
     }
 
     @Test
-    @DatabaseSetup("/ds/1client-ds.xml")
-    @ExpectedDatabase("/ds/blank-ds.xml")
+    @DatabaseSetup("/ds/2phoneNote-ds.xml")
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/ds/1client-ds.xml")
     public void delete() {
         phoneNoteDAO.delete(1);
         phoneNoteDAO.delete(2);

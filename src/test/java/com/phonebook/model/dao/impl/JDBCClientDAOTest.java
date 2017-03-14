@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -48,6 +50,7 @@ public class JDBCClientDAOTest {
     @After
     public void deleteClient() throws Exception {
         client = null;
+        client2 = null;
     }
     @Test
     @DatabaseSetup("/ds/1client-ds.xml")
@@ -90,9 +93,7 @@ public class JDBCClientDAOTest {
     @Test
     @DatabaseSetup("/ds/2client-ds.xml")
     public void readAll(){
-        List<Client> clientListExpected = new ArrayList<>();
-        clientListExpected.add(client);
-        clientListExpected.add(client2);
+        List<Client> clientListExpected = Arrays.asList(client,client2);
         List<Client> clientList = jdbcClientDAO.readAll();
         assertEquals(clientListExpected,clientList);
     }

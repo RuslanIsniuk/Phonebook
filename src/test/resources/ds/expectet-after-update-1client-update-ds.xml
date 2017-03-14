@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dataset>
     <clients client_id="1" client_login="testLogin2" client_pass="testPass2" client_full_name="testFullName2"/>
-
+    <phonebook/>
 </dataset>

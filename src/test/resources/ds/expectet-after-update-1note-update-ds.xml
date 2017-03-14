@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <clients client_id="1" client_login="testLogin" client_pass="testPass" client_full_name="testFullName"/>
+    <phonebook note_id="1" client_id="1" first_name="testFName4" second_name="testSName4"  additional_name="testAName4" mobile_number="testMobNum4" home_number="testHNum4" location="testLocation4" email="testEmail4"/>
+</dataset>
