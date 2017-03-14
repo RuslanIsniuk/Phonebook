@@ -28,6 +28,7 @@ public class JDBCClientDAOTest {
     @Autowired
     private JDBCClientDAO jdbcClientDAO;
     private  Client client;
+    private Client client2;
 
     @Before
     public void setClientData() throws Exception {
@@ -36,6 +37,12 @@ public class JDBCClientDAOTest {
         client.setClientPass("testPass");
         client.setClientFullName("testFullName");
         client.setClientID(1);
+
+        client2 = new Client();
+        client2.setClientLogin("testLogin2");
+        client2.setClientPass("testPass2");
+        client2.setClientFullName("testFullName2");
+        client2.setClientID(2);
     }
 
     @After
@@ -81,25 +88,12 @@ public class JDBCClientDAOTest {
     }
 
     @Test
-    @DatabaseSetup("/ds/blank-ds.xml")
+    @DatabaseSetup("/ds/2client-ds.xml")
     public void readAll(){
         List<Client> clientListExpected = new ArrayList<>();
-        Client client2 = new Client();
-        client2.setClientLogin("testLogin2");
-        client2.setClientPass("testPass2");
-        client2.setClientFullName("testFullName2");
-        client2.setClientID(2);
         clientListExpected.add(client);
         clientListExpected.add(client2);
-
-        jdbcClientDAO.insert(client);
-        jdbcClientDAO.insert(client2);
-
         List<Client> clientList = jdbcClientDAO.readAll();
-
-        jdbcClientDAO.delete(client.getClientID());
-        jdbcClientDAO.delete(client2.getClientID());
-
         assertEquals(clientListExpected,clientList);
     }
 
@@ -113,17 +107,16 @@ public class JDBCClientDAOTest {
     }
 
     @Test
-    @DatabaseSetup("/ds/blank-ds.xml")
+    @DatabaseSetup("/ds/1client-ds.xml")
+    @ExpectedDatabase(
+            assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/ds/expectet-after-update-1client-update-ds.xml")
     public void update(){
-        jdbcClientDAO.insert(client);
         client.setClientLogin("testLogin2");
         client.setClientPass("testPass2");
         client.setClientFullName("testFullName2");
 
         jdbcClientDAO.update(client);
         Client clientFromDB = jdbcClientDAO.read(client.getClientID());
-        jdbcClientDAO.delete(client.getClientID());
-
         assertEquals(client,clientFromDB);
 
     }

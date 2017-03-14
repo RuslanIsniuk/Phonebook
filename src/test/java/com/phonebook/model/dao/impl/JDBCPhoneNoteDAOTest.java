@@ -67,7 +67,7 @@ public class JDBCPhoneNoteDAOTest {
     }
 
     @Test
-    @DatabaseSetup("/ds/1client-ds.xml")
+    @DatabaseSetup("/ds/1phoneNote-ds.xml")
     public void read(){
         PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote.getNoteID());
         assertEquals(phoneNote, phoneNote1);
