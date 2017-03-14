@@ -75,7 +75,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 
     <bean id="dbProperties"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="#{systemProperties['lardi.conf']}"/>
+        <property name="location" value="file:#{systemProperties['lardi.conf']}"/>
     </bean>
 
     <bean id="clientFile" class="java.io.File">

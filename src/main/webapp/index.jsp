@@ -15,7 +15,7 @@
         <h3>Login Page</h3>
 
         <h4>Please enter your login and password:</h4>
-        <form action="/Servlet" method="post">
+        <form action="${pageContext.request.contextPath}/Servlet" method="post">
             <p>Username: <input type="text" name="username"/></p>
             <p>Password: <input type="password" name="password"/><br/></p>
             <input type="hidden" value="authentication" name="actionType"/>

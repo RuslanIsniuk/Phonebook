@@ -16,7 +16,7 @@
     <p>===============================</p>
 
     <form method="post" action="${pageContext.request.contextPath}/Servlet">
-        <p><h4><input type="radio" value="viewPhonebook" name="actionType"/> Open phonebook</h4></p>
+        <p><h4><input type="radio" value="viewPhonebook" name="actionType" checked="checked"/> Open phonebook</h4></p>
         <p><h4><input type="radio" value="openAddNotePage" name="actionType"/> Add new note</h4></p>
         <input type="hidden" value="${clientID}" name="clientID"/>
         <input type="submit" value="Submit" name="onButton"/>
