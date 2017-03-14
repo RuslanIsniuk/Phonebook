@@ -123,7 +123,7 @@ public class XMLClientDAOTest {
         xmlClientDAO.delete(client.getClientID());
         Client clientFromBD = xmlClientDAO.read(client.getClientID());
 
-        assertNull(clientFromBD);;
+        assertNull(clientFromBD);
     }
 
 

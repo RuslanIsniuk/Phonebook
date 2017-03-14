@@ -10,7 +10,7 @@
 <h4>Do You really want to delete note with: <c:out value="${phoneNote.firstName}"></c:out> <c:out
         value="${phoneNote.secondName}"></c:out>?</h4>
 <p>
-<form method="post" action="/Servlet">
+<form method="post" action="${pageContext.request.contextPath}/Servlet">
     <input type="hidden" value="${clientID}" name="clientID"/>
     <input type="hidden" value="${phoneNote.noteID}" name="noteID"/>
     <input type="hidden" value="deleteNoteConfirm" name="actionType"/>
@@ -18,7 +18,7 @@
 </form>
 </p>
 <p>
-<form method="post" action="/Servlet">
+<form method="post" action="${pageContext.request.contextPath}/Servlet">
     <input type="hidden" value="${clientID}" name="clientID"/>
     <input type="hidden" value="returnToMainPage" name="actionType"/>
     <input type="submit" value="Return to homepage" name="chooseButton" align="center"/>

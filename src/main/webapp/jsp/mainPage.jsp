@@ -15,14 +15,14 @@
     <p><h4>Operations</h4></p>
     <p>===============================</p>
 
-    <form method="post" action="/Servlet">
+    <form method="post" action="${pageContext.request.contextPath}/Servlet">
         <p><h4><input type="radio" value="viewPhonebook" name="actionType"/> Open phonebook</h4></p>
         <p><h4><input type="radio" value="openAddNotePage" name="actionType"/> Add new note</h4></p>
         <input type="hidden" value="${clientID}" name="clientID"/>
         <input type="submit" value="Submit" name="onButton"/>
     </form>
 
-    <p><form action="/Servlet" method="post">
+    <p><form action="${pageContext.request.contextPath}/Servlet" method="post">
         <input type="hidden" value="LogOut" name="actionType"/>
         <input type="submit" value="Log out" name="homeButton"/>
     </form></p>

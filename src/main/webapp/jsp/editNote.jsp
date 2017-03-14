@@ -12,7 +12,7 @@
 
 
         <table width="30%" cellspacing="0" cellpadding="4">
-            <form method="post" action="/Servlet">
+            <form method="post" action="${pageContext.request.contextPath}/Servlet">
                 <tr>
                     <td colspan="2" align="center"><h3>Edit Note:</h3></td>
                 </tr>
@@ -76,7 +76,7 @@
 
             <tr>
                 <td align="right">
-                    <form method="post" action="/Servlet">
+                    <form method="post" action="${pageContext.request.contextPath}/Servlet">
                         <input type="hidden" value="${clientID}" name="clientID"/>
                         <input type="hidden" value="returnToMainPage" name="actionType"/>
                         <input type="submit" value="Return to homepage" name="chooseButton" align="center"/>

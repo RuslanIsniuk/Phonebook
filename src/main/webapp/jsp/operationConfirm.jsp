@@ -17,7 +17,7 @@
 
     <tr>
         <td align="right" width="100">
-            <form method="post" action="/Servlet">
+            <form method="post" action="${pageContext.request.contextPath}/Servlet">
                 <input type="hidden" value="${clientID}" name="clientID"/>
                 <input type="hidden" value="returnToMainPage" name="actionType"/>
                 <input type="submit" value="Return to homepage" name="chooseButton" align="center"/>

@@ -14,7 +14,7 @@
     <blockquote>
         <h3>Registration Page</h3>
 
-        <form method="post" action="/Servlet">
+        <form method="post" action="${pageContext.request.contextPath}/Servlet">
             <p>Please enter login:
             <p><input type="text" size="20" maxlength="30" name="username"></p></p>
             <p>Please enter password:

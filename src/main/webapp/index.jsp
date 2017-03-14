@@ -24,7 +24,7 @@
 
         <p>Or sign up, if you don't have account. </p>
         <p>
-        <form action="/Servlet" method="post">
+        <form action="${pageContext.request.contextPath}/Servlet" method="post">
             <input type="hidden" value="openRegistrationPage" name="actionType"/>
             <input type="submit" value="Sign up"/>
         </form>

@@ -34,14 +34,14 @@
                     <td><c:out value="${phoneNoteList[i].location}"></c:out></td>
                     <td><c:out value="${phoneNoteList[i].email}"></c:out></td>
                     <td>
-                        <form method="post" action="/Servlet">
+                        <form method="post" action="${pageContext.request.contextPath}/Servlet">
                             <input type="hidden" value="${phoneNoteList[i].noteID}" name="noteID"/>
                             <input type="hidden" value="${clientID}" name="clientID"/>
                             <input type="hidden" value="openEditNotePage" name="actionType"/>
                             <input type="submit" value="  Edit  " name="chooseButton" align="center"/>
                         </form>
                    
-                        <form method="post" action="/Servlet">
+                        <form method="post" action="${pageContext.request.contextPath}/Servlet">
                             <input type="hidden" value="${phoneNoteList[i].noteID}" name="noteID"/>
                             <input type="hidden" value="${clientID}" name="clientID"/>
                             <input type="hidden" value="openDeleteNotePage" name="actionType"/>
@@ -55,7 +55,7 @@
 
         <h3><font color="#dc143c"><c:out value="${errorMessage}"></c:out></font></h3></p>
 
-        <form method="post" action="/Servlet">
+        <form method="post" action="${pageContext.request.contextPath}/Servlet">
             <p>Find by :</p>
             <p><h4><input type="radio" value="filterByFirstName" name="actionType"/> first name</h4>
             <h4><input type="radio" value="filterBySecondName" name="actionType"/> second name</h4>
@@ -65,7 +65,7 @@
             <input type="submit" value="Find" name="homeButton"/>
         </form>
 
-        <form method="post" action="/Servlet">
+        <form method="post" action="${pageContext.request.contextPath}/Servlet">
             <input type="hidden" value="${clientID}" name="clientID"/>
             <input type="hidden" value="returnToMainPage" name="actionType"/>
             <input type="submit" value="Return to homepage" name="chooseButton" align="center"/>
