@@ -6,7 +6,6 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.phonebook.entities.Client;
 import com.phonebook.entities.PhoneNote;
-import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.dao.PhoneNoteDAO;
 import org.junit.After;
 import org.junit.Before;
@@ -30,8 +29,6 @@ import static org.junit.Assert.*;
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 public class JDBCPhoneNoteDAOTest {
-    @Autowired
-    private  ClientDAO clientDAO;
     @Autowired
     private  PhoneNoteDAO phoneNoteDAO;
     private Client client;
@@ -72,13 +69,6 @@ public class JDBCPhoneNoteDAOTest {
 
     }
 
-    @After
-    public void tearDown(){
-        client = null;
-        phoneNote = null;
-        phoneNote2 = null;
-    }
-
     @Test
     @DatabaseSetup("/ds/1phoneNote-ds.xml")
     public void read(){
@@ -89,8 +79,8 @@ public class JDBCPhoneNoteDAOTest {
     @Test
     @DatabaseSetup("/ds/1phoneNote-ds.xml")
     public void readByName() {
-        PhoneNote phoneNote1 = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
-        assertEquals(phoneNote, phoneNote1);
+        PhoneNote phoneNoteActual = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
+        assertEquals(phoneNote, phoneNoteActual);
     }
 
     @Test
@@ -121,15 +111,15 @@ public class JDBCPhoneNoteDAOTest {
     @Test
     @DatabaseSetup("/ds/blank-ds.xml")
     public void readNotExist(){
-        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote.getNoteID());
-        assertNull(phoneNote1);
+        PhoneNote phoneNoteActual = phoneNoteDAO.read(phoneNote.getNoteID());
+        assertNull(phoneNoteActual);
     }
 
     @Test
     @DatabaseSetup("/ds/blank-ds.xml")
     public void readByNameNotExist() {
-        PhoneNote phoneNote1 = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
-        assertNull(phoneNote1);
+        PhoneNote phoneNoteActual = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
+        assertNull(phoneNoteActual);
     }
 
     @Test
@@ -152,25 +142,24 @@ public class JDBCPhoneNoteDAOTest {
     @DatabaseSetup("/ds/blank-ds.xml")
     public void readBySubStrInMobileNumberNotExist(){
         List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInMobileNumber("Mob",1);
-        List<PhoneNote> phoneNotes1 = new ArrayList<>();
-        assertEquals(phoneNotes, phoneNotes1);
+        List<PhoneNote> phoneNotesExpected = new ArrayList<>();
+        assertEquals(phoneNotes, phoneNotesExpected);
     }
 
     @Test
-    @DatabaseSetup("/ds/blank-ds.xml")
+    @DatabaseSetup("/ds/1client-ds.xml")
     @ExpectedDatabase(
             assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/ds/expected-after-insert-1note-ds.xml")
     public void create() {
-        clientDAO.insert(client);
         phoneNoteDAO.insert(phoneNote);
     }
 
     @Test
     @DatabaseSetup("/ds/2phoneNote-ds.xml")
     public void testReadAll(){
-        List<PhoneNote> phoneNotes = phoneNoteDAO.readAll();
-        assertEquals(phoneNote, phoneNotes.get(0));
-        assertEquals(phoneNote2, phoneNotes.get(1));
+        List<PhoneNote> phoneNotesActual = phoneNoteDAO.readAll();
+        List<PhoneNote> phoneNotesExpected = Arrays.asList(phoneNote,phoneNote2);
+        assertEquals(phoneNotesActual, phoneNotesExpected);
     }
 
     @Test
@@ -187,16 +176,12 @@ public class JDBCPhoneNoteDAOTest {
         phoneNote.setEmail("testEmail4");
 
         phoneNoteDAO.update(phoneNote);
-        PhoneNote phoneNoteActual = phoneNoteDAO.read(1);
-
-        assertEquals(phoneNote,phoneNoteActual);
     }
 
     @Test
     @DatabaseSetup("/ds/2phoneNote-ds.xml")
-    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/ds/1client-ds.xml")
+    @ExpectedDatabase(assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/ds/expected-after-insert-1note-ds.xml")
     public void delete() {
-        phoneNoteDAO.delete(1);
         phoneNoteDAO.delete(2);
     }
 }

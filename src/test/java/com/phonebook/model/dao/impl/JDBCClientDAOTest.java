@@ -47,11 +47,6 @@ public class JDBCClientDAOTest {
         client2.setClientID(2);
     }
 
-    @After
-    public void deleteClient() throws Exception {
-        client = null;
-        client2 = null;
-    }
     @Test
     @DatabaseSetup("/ds/1client-ds.xml")
     public void read() {

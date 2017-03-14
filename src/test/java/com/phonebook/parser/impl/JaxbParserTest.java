@@ -5,7 +5,6 @@ import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.ClientList;
 import com.phonebook.model.dao.PhoneNoteList;
 import com.phonebook.parser.Parser;
-import junit.framework.TestCase;
 import org.junit.*;
 
 import java.io.File;
@@ -14,16 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class JaxbParserTest extends TestCase {
-    private Parser parser;
-    private static File clientFile;
-    private static File phoneNoteFile;
+public class JaxbParserTest {
+    private Parser parser = new JaxbParser();
+    private File clientFile = new File("clientList.xml");
+    private File phoneNoteFile = new File("phoneNoteList.xml");
 
     @Before
     public void createFiles() throws Exception {
-        parser = new JaxbParser();
-        clientFile = new File("clientList.xml");
-        phoneNoteFile = new File("phoneNoteList.xml");
 
         try {
             clientFile.createNewFile();
@@ -62,13 +58,13 @@ public class JaxbParserTest extends TestCase {
         ClientList clientList = new ClientList();
         clientList.setClientList(clients);
 
-        parser.writeInFile(clientFile,clientList);
+        parser.writeInFile(clientFile, clientList);
         ClientList clientList2 = (ClientList) parser.getFromFile(clientFile, ClientList.class);
         System.out.println(clientList2.getClientList());
     }
 
     @Test
-    public void testGetPhoneNoteObject() throws Exception{
+    public void testGetPhoneNoteObject() throws Exception {
         Client client = new Client();
         client.setClientID(1);
         client.setClientLogin("testLogin");
@@ -104,8 +100,8 @@ public class JaxbParserTest extends TestCase {
         PhoneNoteList phoneNoteList = new PhoneNoteList();
         phoneNoteList.setNoteList(phoneNotes);
 
-        parser.writeInFile(phoneNoteFile,phoneNoteList);
-        PhoneNoteList phoneNoteList1 = (PhoneNoteList) parser.getFromFile(phoneNoteFile,PhoneNoteList.class);
+        parser.writeInFile(phoneNoteFile, phoneNoteList);
+        PhoneNoteList phoneNoteList1 = (PhoneNoteList) parser.getFromFile(phoneNoteFile, PhoneNoteList.class);
         System.out.println(phoneNoteList1.getNoteList());
     }
 

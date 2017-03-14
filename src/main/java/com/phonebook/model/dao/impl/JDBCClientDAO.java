@@ -122,7 +122,7 @@ public class JDBCClientDAO implements ClientDAO {
 
     @Override
     public void update(Client client) {
-        jdbcTemplate.update(SQLStatementUpdate,client.getClientLogin(), client.getClientPass(), client.getClientFullName(), client.getClientID());
+        jdbcTemplate.update(SQLStatementUpdate, client.getClientLogin(), client.getClientPass(), client.getClientFullName(), client.getClientID());
     }
 
     @Override
