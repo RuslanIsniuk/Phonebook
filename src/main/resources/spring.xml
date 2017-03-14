@@ -73,15 +73,10 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 
     <bean id="JDBCPhoneNoteDAO" class="com.phonebook.model.dao.impl.JDBCPhoneNoteDAO"/>
 
-    <!--<bean id="XMLClientDAO" class="com.phonebook.model.dao.impl.XMLClientDAO">
-        <constructor-arg ref="parser"/>
-        <constructor-arg ref="clientFile"/>
+    <bean id="dbProperties"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="#{systemProperties['lardi.conf']}"/>
     </bean>
-
-    <bean id="XMLPhoneNoteDAO" class="com.phonebook.model.dao.impl.XMLPhoneNoteDAO">
-        <constructor-arg ref="parser"/>
-        <constructor-arg ref="noteFile"/>
-    </bean> -->
 
     <bean id="clientFile" class="java.io.File">
         <constructor-arg value="clientList.xml"/>
@@ -92,10 +87,5 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
     </bean>
 
     <bean id="parser" class="com.phonebook.parser.impl.JaxbParser"/>
-
-    <bean id="dbProperties"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:db.properties"/>
-    </bean>
 
 </beans>
