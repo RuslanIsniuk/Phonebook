@@ -112,7 +112,7 @@ public class XMLPhoneNoteDAO implements PhoneNoteDAO {
     }
 
     @Override
-    public void create(PhoneNote phoneNote) {
+    public void insert(PhoneNote phoneNote) {
         phoneNote.setNoteID(++noteIDCounter);
         phoneNoteList.addNote(phoneNote);
     }

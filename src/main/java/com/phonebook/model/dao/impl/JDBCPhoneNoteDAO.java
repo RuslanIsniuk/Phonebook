@@ -172,7 +172,7 @@ public class JDBCPhoneNoteDAO implements PhoneNoteDAO {
     }
 
     @Override
-    public void create(PhoneNote phoneNote) {
+    public void insert(PhoneNote phoneNote) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
                                 @Override

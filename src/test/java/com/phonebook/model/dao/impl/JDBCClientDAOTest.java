@@ -67,22 +67,16 @@ public class JDBCClientDAOTest {
     }
 
     @Test
-    @DatabaseSetup("/ds/blank-ds.xml")
+    @DatabaseSetup("/ds/1client-ds.xml")
     public void readByLogin() {
-        jdbcClientDAO.insert(client);
-        Client client1 = jdbcClientDAO.readByLogin(client.getClientLogin());
-        jdbcClientDAO.delete(client.getClientID());
-
-        assertEquals(client, client1);
+        Client clientFromDB = jdbcClientDAO.readByLogin(client.getClientLogin());
+        assertEquals(client, clientFromDB);
     }
 
     @Test
     @DatabaseSetup("/ds/blank-ds.xml")
     public void readByLoginNotExist() {
-        jdbcClientDAO.insert(client);
         Client clientActual = jdbcClientDAO.readByLogin("test2Login");
-        jdbcClientDAO.delete(client.getClientID());
-
         assertNull(clientActual);
     }
 

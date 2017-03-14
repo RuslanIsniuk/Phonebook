@@ -19,7 +19,7 @@ public interface PhoneNoteDAO {
 
     List<PhoneNote> readAll();
 
-    void create(PhoneNote phoneNote);
+    void insert(PhoneNote phoneNote);
 
     void update(PhoneNote phoneNote);
 

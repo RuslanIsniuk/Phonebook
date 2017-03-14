@@ -23,7 +23,7 @@
                 <th>Email</th>
                 <th></th>
             </tr>
-
+            <c:if test="${phoneNoteList.size()>0}">
             <c:forEach var="i" begin="0" end="${phoneNoteList.size()-1}">
                 <tr>
                     <td><c:out value="${phoneNoteList[i].firstName}"></c:out></td>
@@ -50,7 +50,7 @@
                     </td>
 
                 </tr>
-            </c:forEach>
+            </c:forEach></c:if>
         </table>
 
         <h3><font color="#dc143c"><c:out value="${errorMessage}"></c:out></font></h3></p>

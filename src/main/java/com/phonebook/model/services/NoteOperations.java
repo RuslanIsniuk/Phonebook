@@ -36,7 +36,7 @@ public class NoteOperations {
         checkForCorrectInput(phoneNote);
         checkForDuplicateData(phoneNote, phoneNoteList);
         phoneNote.setNoteOwner(client);
-        phoneNoteDAO.create(phoneNote);
+        phoneNoteDAO.insert(phoneNote);
     }
 
     public void deleteNote(int noteID) {

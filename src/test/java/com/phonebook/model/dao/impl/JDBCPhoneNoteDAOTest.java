@@ -1,39 +1,52 @@
 package com.phonebook.model.dao.impl;
 
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import com.phonebook.entities.Client;
 import com.phonebook.entities.PhoneNote;
 import com.phonebook.model.dao.ClientDAO;
 import com.phonebook.model.dao.PhoneNoteDAO;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring-dao.xml"})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
+        DbUnitTestExecutionListener.class})
 public class JDBCPhoneNoteDAOTest {
     @Autowired
     private  ClientDAO clientDAO;
     @Autowired
     private  PhoneNoteDAO phoneNoteDAO;
-    private static Client client = new Client();
-    private static PhoneNote phoneNote = new PhoneNote();
-    private static PhoneNote phoneNote2 = new PhoneNote();
+    private Client client;
+    private PhoneNote phoneNote;
+    private PhoneNote phoneNote2;
 
-    @BeforeClass
-    public static void setClientData() throws Exception {
+    @Before
+    public void setUp() throws Exception {
+        client = new Client();
+        phoneNote = new PhoneNote();
+        phoneNote2 = new PhoneNote();
+
         client.setClientLogin("testLogin");
         client.setClientPass("testPass");
         client.setClientFullName("testFullName");
 
+        phoneNote.setNoteID(1);
         phoneNote.setFirstName("testFName");
         phoneNote.setSecondName("testSName");
         phoneNote.setAdditionalName("testAName");
@@ -42,6 +55,7 @@ public class JDBCPhoneNoteDAOTest {
         phoneNote.setLocation("testLocation");
         phoneNote.setEmail("testEmail");
 
+        phoneNote2.setNoteID(2);
         phoneNote2.setFirstName("testFName2");
         phoneNote2.setSecondName("testSName2");
         phoneNote2.setAdditionalName("testAName2");
@@ -50,141 +64,123 @@ public class JDBCPhoneNoteDAOTest {
         phoneNote2.setLocation("testLocation2");
         phoneNote2.setEmail("testEmail2");
 
-
-    }
-    private void createObj(){
-        clientDAO.insert(client);
-        phoneNote.setNoteOwner(client);
-        phoneNote2.setNoteOwner(client);
-        phoneNoteDAO.create(phoneNote);
-        phoneNoteDAO.create(phoneNote2);
-    }
-
-    private void deleteObj(){
-        phoneNoteDAO.delete(phoneNote.getNoteID());
-        phoneNoteDAO.delete(phoneNote2.getNoteID());
-        clientDAO.delete(client.getClientID());
     }
 
     @Test
-    public void testReadByName() {
-        createObj();
-        PhoneNote phoneNote1 = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
-        deleteObj();
+    @DatabaseSetup("/ds/1client-ds.xml")
+    public void read(){
+        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote.getNoteID());
         assertEquals(phoneNote, phoneNote1);
     }
 
     @Test
-    public void testReadBySubStrInFirstName() {
-        createObj();
+    @DatabaseSetup("/ds/1client-ds.xml")
+    public void readByName() {
+        PhoneNote phoneNote1 = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
+        assertEquals(phoneNote, phoneNote1);
+    }
+
+    @Test
+    @DatabaseSetup("/ds/1client-ds.xml")
+    public void readBySubStrInFirstName() {
         List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInFirstName("testF",client.getClientID());
-        deleteObj();
         assertEquals(phoneNote, phoneNotes.get(0));
         assertEquals(phoneNote2, phoneNotes.get(1));
     }
 
     @Test
-    public void testReadBySubStrInSecondName(){
-        createObj();
+    @DatabaseSetup("/ds/1client-ds.xml")
+    public void readBySubStrInSecondName(){
         List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInSecondName("testS",client.getClientID());
-        deleteObj();
         assertEquals(phoneNote, phoneNotes.get(0));
         assertEquals(phoneNote2, phoneNotes.get(1));
     }
 
     @Test
-    public void testReadBySubStrInMobileNumber(){
-        createObj();
+    @DatabaseSetup("/ds/1client-ds.xml")
+    public void readBySubStrInMobileNumber(){
         List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInMobileNumber("Mob",client.getClientID());
-        deleteObj();
         assertEquals(phoneNote, phoneNotes.get(0));
         assertEquals(phoneNote2, phoneNotes.get(1));
     }
 
     @Test
-    public void testCreateAndRead() {
-        createObj();
-        PhoneNote phoneNote3 = new PhoneNote();
-        phoneNote3.setNoteOwner(client);
-        phoneNote3.setFirstName("testFName3");
-        phoneNote3.setSecondName("testSName3");
-        phoneNote3.setAdditionalName("testAName3");
-        phoneNote3.setMobileNumber("testMobNum3");
-        phoneNote3.setHomeNumber("testHNum3");
-        phoneNote3.setLocation("testLocation3");
-        phoneNote3.setEmail("testEmail3");
-        phoneNoteDAO.create(phoneNote3);
-        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote3.getNoteID());
-
-        phoneNoteDAO.delete(phoneNote3.getNoteID());
-        deleteObj();
-        assertEquals(phoneNote1, phoneNote3);
+    @DatabaseSetup("/ds/blank-ds.xml")
+    public void readNotExist(){
+        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote.getNoteID());
+        assertNull(phoneNote1);
     }
 
     @Test
+    @DatabaseSetup("/ds/blank-ds.xml")
+    public void readByNameNotExist() {
+        PhoneNote phoneNote1 = phoneNoteDAO.readByName(phoneNote.getFirstName(), phoneNote.getSecondName());
+        assertNull(phoneNote1);
+    }
+
+    @Test
+    @DatabaseSetup("/ds/blank-ds.xml")
+    public void readBySubStrInFirstNameNotExist() {
+        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInFirstName("testF",client.getClientID());
+        List<PhoneNote> phoneNotes1 = new ArrayList<>();
+        assertEquals(phoneNotes, phoneNotes1);
+    }
+
+    @Test
+    @DatabaseSetup("/ds/blank-ds.xml")
+    public void readBySubStrInSecondNameNotExist(){
+        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInSecondName("testS",client.getClientID());
+        List<PhoneNote> phoneNotes1 = new ArrayList<>();
+        assertEquals(phoneNotes, phoneNotes1);
+    }
+
+    @Test
+    @DatabaseSetup("/ds/blank-ds.xml")
+    public void readBySubStrInMobileNumberNotExist(){
+        List<PhoneNote> phoneNotes = phoneNoteDAO.readBySubStrInMobileNumber("Mob",client.getClientID());
+        List<PhoneNote> phoneNotes1 = new ArrayList<>();
+        assertEquals(phoneNotes, phoneNotes1);
+    }
+
+    @Test
+    @DatabaseSetup("/ds/blank-ds.xml")
+    @ExpectedDatabase(
+            assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/ds/expected-after-insert-1note-ds.xml")
+    public void create() {
+        clientDAO.insert(client);
+        phoneNoteDAO.insert(phoneNote);
+    }
+
+    @Test
+    @DatabaseSetup("/ds/blank-ds.xml")
     public void testReadAll(){
-        createObj();
         List<PhoneNote> phoneNotes = phoneNoteDAO.readAll();
-        deleteObj();
         assertEquals(phoneNote, phoneNotes.get(0));
         assertEquals(phoneNote2, phoneNotes.get(1));
     }
 
     @Test
+    @DatabaseSetup("/ds/1client-ds.xml")
     public void testUpdate(){
-        createObj();
-        PhoneNote phoneNote4 = new PhoneNote();
-        phoneNote4.setNoteOwner(client);
-        phoneNote4.setFirstName("testFName4");
-        phoneNote4.setSecondName("testSName4");
-        phoneNote4.setAdditionalName("testAName4");
-        phoneNote4.setMobileNumber("testMobNum4");
-        phoneNote4.setHomeNumber("testHNum4");
-        phoneNote4.setLocation("testLocation4");
-        phoneNote4.setEmail("testEmail4");
+        phoneNote.setFirstName("testFName4");
+        phoneNote.setSecondName("testSName4");
+        phoneNote.setAdditionalName("testAName4");
+        phoneNote.setMobileNumber("testMobNum4");
+        phoneNote.setHomeNumber("testHNum4");
+        phoneNote.setLocation("testLocation4");
+        phoneNote.setEmail("testEmail4");
 
-        phoneNoteDAO.create(phoneNote4);
+        phoneNoteDAO.update(phoneNote);
+        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote.getNoteID());
 
-        phoneNote4.setFirstName("testNewFName4");
-        phoneNote4.setSecondName("testNewSName4");
-        phoneNote4.setAdditionalName("testNewAName4");
-        phoneNote4.setMobileNumber("testNewMobNum4");
-        phoneNote4.setHomeNumber("testNewHNum4");
-        phoneNote4.setLocation("testNewLocation4");
-        phoneNote4.setEmail("testNewEmail4");
-
-        phoneNoteDAO.update(phoneNote4);
-        PhoneNote phoneNote1 = phoneNoteDAO.read(phoneNote4.getNoteID());
-        phoneNoteDAO.delete(phoneNote4.getNoteID());
-        deleteObj();
-
-        assertEquals(phoneNote4,phoneNote1);
+        assertEquals(phoneNote,phoneNote1);
     }
 
     @Test
-    public void testDelete(){
-        createObj();
-        PhoneNote phoneNote4 = new PhoneNote();
-        PhoneNote phoneNote5;
-        PhoneNote phoneNote6 = new PhoneNote();
-        phoneNote4.setNoteOwner(client);
-        phoneNote4.setFirstName("testFName4");
-        phoneNote4.setSecondName("testSName4");
-        phoneNote4.setAdditionalName("testAName4");
-        phoneNote4.setMobileNumber("testMobNum4");
-        phoneNote4.setHomeNumber("testHNum4");
-        phoneNote4.setLocation("testLocation4");
-        phoneNote4.setEmail("testEmail4");
-
-        phoneNoteDAO.create(phoneNote4);
-        phoneNoteDAO.delete(phoneNote4.getNoteID());
-
-        try{
-            phoneNote5 = phoneNoteDAO.read(phoneNote4.getNoteID());
-        }catch (EmptyResultDataAccessException erdae){
-            phoneNote5 = new PhoneNote();
-        }
-        deleteObj();
-        assertEquals(phoneNote5,phoneNote6);
+    @DatabaseSetup("/ds/1client-ds.xml")
+    @ExpectedDatabase("/ds/blank-ds.xml")
+    public void delete() {
+        phoneNoteDAO.delete(1);
+        phoneNoteDAO.delete(2);
     }
 }

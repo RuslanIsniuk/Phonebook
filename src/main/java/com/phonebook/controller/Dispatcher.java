@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class Dispatcher {
     private static final Logger logger = Logger.getLogger(Dispatcher.class);
-    private static final Dispatcher Instance = new Dispatcher();
+
     private AuthenticationCommand authenticationCommand;
     private RegistrationCommand registrationCommand;
     private OpenPageCommand openPageCommand;
@@ -17,7 +17,7 @@ public class Dispatcher {
     private AddNoteCommand addNoteCommand;
     private DeleteNoteCommand deleteNoteCommand;
 
-    private Dispatcher() {
+    public Dispatcher() {
     }
 
     public Dispatcher(AuthenticationCommand authenticationCommand, RegistrationCommand registrationCommand,
@@ -90,9 +90,5 @@ public class Dispatcher {
 
         return pathToJSP;
 
-    }
-
-    public static Dispatcher getInstance() {
-        return Instance;
     }
 }

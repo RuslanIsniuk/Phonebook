@@ -7,43 +7,38 @@ import com.phonebook.model.dao.PhoneNoteList;
 import com.phonebook.parser.Parser;
 import junit.framework.TestCase;
 import org.junit.*;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-dao.xml"})
+
 public class JaxbParserTest extends TestCase {
-    @Autowired
     private Parser parser;
     private static File clientFile;
     private static File phoneNoteFile;
 
-    @BeforeClass
-    public static void createFiles() throws Exception {
+    @Before
+    public void createFiles() throws Exception {
+        parser = new JaxbParser();
         clientFile = new File("clientList.xml");
         phoneNoteFile = new File("phoneNoteList.xml");
 
         try {
-           clientFile.createNewFile();
-           phoneNoteFile.createNewFile();
+            clientFile.createNewFile();
+            phoneNoteFile.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @AfterClass
-    public static void delete()throws Exception{
-        try{
+    @After
+    public void delete() throws Exception {
+        try {
             clientFile.delete();
-            phoneNoteFile.delete() ;
-        }catch (Exception e){
+            phoneNoteFile.delete();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -2,5 +2,4 @@
 <dataset>
     <clients client_id="1" client_login="testLogin" client_pass="testPass" client_full_name="testFullName"/>
     <phonebook note_id="1" client_id="1" first_name="testFName" second_name="testSName"  additional_name="testAName" mobile_number="testMobNum" home_number="testHNum" location="testLocation" email="testEmail"/>
-    <phonebook note_id="2" client_id="1" first_name="testFName2" second_name="testSName2"  additional_name="testAName2" mobile_number="testMobNum2" home_number="testHNum2" location="testLocation2" email="testEmail2"/>
 </dataset>
